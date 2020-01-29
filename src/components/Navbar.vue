@@ -12,13 +12,13 @@
             <!-- </div> -->
           </v-col>
           <v-col lg="4">
-            <v-btn text class="navbarButton">Profile</v-btn>
-            <v-btn text class="navbarButton">Home</v-btn>
-            <v-btn icon>
+            <v-btn text class="navbarButton" @click="$router.push({path:'/profile'})">Profile</v-btn>
+            <v-btn text class="navbarButton" @click="$router.push({path:'/home'})">Home</v-btn>
+            <v-btn icon @click="$router.push({path:'/notifications'})">
               <v-icon class="navbarButton">fas fa-bell</v-icon>
             </v-btn>
-            <v-btn icon>
-              <v-icon class="navbarButton">fas fa-user-friends</v-icon>
+            <v-btn icon @click="$router.push({path:'/requests'})">
+              <v-icon class="navbarButton" >fas fa-user-friends</v-icon>
             </v-btn>
           </v-col>
         </v-row>
