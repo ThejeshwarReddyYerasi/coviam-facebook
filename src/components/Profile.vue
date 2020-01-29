@@ -1,15 +1,78 @@
 <template>
   <v-container>
-    profile
+    <v-row class="boxColor">
+      <v-col lg="4">
+        <v-avatar size="250">
+          <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+        </v-avatar>
+      </v-col>
+      <v-col>
+        <v-row><v-icon style="padding-right:5px">fas fa-globe-americas</v-icon><b>Intro</b></v-row>
+       <v-row>Description</v-row>
+       <v-row>Thejeshwar reddy yerasi</v-row>
+       <v-row>personal</v-row>
+       <v-row>public</v-row>
+       <v-row>email id</v-row>
+       <v-row>city</v-row>
+       <v-row>gender</v-row>
+       <v-row>age</v-row>
+      </v-col>
+    </v-row>
+    <v-container>
+      <v-row>
+        <!-- <v-col lg="4">
+          v-row
+        </v-col> -->
+        <v-col lg="8" class="boxColor boxMarginCenter">
+          <v-row>
+            <v-col lg="2">
+              <v-avatar>
+                <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+              </v-avatar>
+            </v-col>
+            <v-col lg="10">
+              <v-row>Name</v-row>
+              <v-row>Time</v-row>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-container class="boxTextLeft">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution</v-container>
+          </v-row>
+          <v-row>
+            <v-img class="boxMarginCenter" max-height="300" max-width="700" src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" :contain="true">
+            </v-img>
+          </v-row>
+          <v-row style="margin-top:5px">
+            <video class="boxMarginCenter" width="320" height="240" controls>
+              <source src="" type="video/mp4">
+            </video>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
 <script>
 export default {
   name: 'Profile',
-
   data: () => ({
-    
+    posts:[
+      {
+
+      }
+    ]
   }),
 };
 </script>
+<style scoped>
+.boxColor{
+  background-color: white!important
+}
+.boxMarginCenter{
+  margin:auto!important
+}
+.boxTextLeft{
+  text-align: left!important
+}
+</style>

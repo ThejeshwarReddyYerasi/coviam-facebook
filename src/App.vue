@@ -1,8 +1,23 @@
 <template>
   <div id="app">
+    <navbar></navbar>
+    <div></div>
     <router-view/>
   </div>
 </template>
+
+<script>
+import navbar from './components/Navbar'
+export default {
+  name: 'App',
+  components:{
+    navbar,
+  },
+  data: () => ({
+    
+  }),
+};
+</script>
 
 <style lang="scss">
 #app {
@@ -11,6 +26,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-color: #E9EBEE
 }
 
 #nav {
