@@ -34,6 +34,7 @@ const routes = [
     path:'/editProfile',
     name: 'editProfile',
     component: EditProfile
+  },
   {
     path: '/category',
     name: 'category',
