@@ -1,31 +1,28 @@
 <template>
   <v-container>
     <div class='main'>
-      <v-table>
         <v-row>
-          <v-column>
+          <v-col>
             <div class='newsfeed'>
-            <div id='postcreate'>
-              <div>What's on your mind Today!!</div>
-              <div></div>
+            <CreatePosts></CreatePosts>
             </div>
-            </div>
-          </v-column>
-          <v-column>
+          </v-col>
+          <v-col>
             <div class='ads'>
               This is the Ads Div
             </div>
-          </v-column>
+          </v-col>
         </v-row>
-      </v-table>
     </div>
   </v-container>
 </template>
 
 
 <script>
+import CreatePosts from './CreatePosts'
 export default {
   name: 'Home',
+  components: {CreatePosts},
   data: () => ({
     
   }),
@@ -36,7 +33,6 @@ export default {
 {
   width: 750px;
   height: 100%;
-  background: #c0c0c0;
   border-radius: 10px;
   margin-top: 10px;
   margin-right: 50px;
@@ -53,7 +49,7 @@ export default {
 .main{
   width:100%;
   height:900px;
-  background: beige;
+  background: #e9ebee;
 }
 .postcreate{
   align-self: left;
