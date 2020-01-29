@@ -3,15 +3,15 @@
     <div class="title" style="font-weight:bold">
         Edit Profile</div>
         <br> 
-  <v-form
+    <v-form
     align-content="center"
     ref="form"
     max-width="100"
     v-model="valid"
     lazy-validation
-  > 
+    > 
     <v-text-field
-      v-model="name"
+      v-model="user.userId"
       :counter="10"
       :rules="nameRules"
       label="User ID"
@@ -19,7 +19,7 @@
     ></v-text-field>
 
     <v-text-field
-      v-model="name"
+      v-model="user.userName"
       :counter="10"
       :rules="nameRules"
       label="Username"
@@ -28,14 +28,14 @@
 
      <v-text-field
      type="email"
-      v-model="email"
+      v-model="user.userEmailId"
       :rules="emailRules"
       label="E-mail"
       required
     ></v-text-field>
 
     <v-text-field
-      v-model="email"
+      v-model="user.userCity"
       :rules="emailRules"
       label="city"
       required
@@ -43,50 +43,52 @@
       
       <v-text-field
       type="date"
-      v-model="email"
+      v-model="user.userDateOfBirth"
       :rules="emailRules"
       label="Date Of Birth"
       required
     ></v-text-field>
 
        <v-select
-      v-model="gender"
+      v-model="user.userGender"
       :items="gender"
       :rules="[v => !!v || 'Item is required']"
       label="Gender"
       required
-    ></v-select>
-
+    >   <option>male</option>
+        </v-select>
+   
       <v-select
-        v-model="type"
-        :items="items"
+        v-model="user.typeOfProfile"
+        :items="type"
         :rules="[v => !!v || 'Item is required']"
         label="Type Of Profile"
         required
-      ></v-select>
+      >
+      </v-select>
 
        <v-select
-        v-model="domain"
-        :items="items"
+        v-model="user.domainOfProfile"
+        :items="domain"
         :rules="[v => !!v || 'Item is required']"
         label="Domain Of Profile"
         required
       ></v-select>
 
     <v-text-field
-      v-model="name"
+      v-model="user.personalDescription"
       :counter="10"
       :rules="nameRules"
       label="Personal Description"
       required
     ></v-text-field>
 
-    <v-file-input accept="image/*" prepend-icon="mdi-camera" label="Uplaod Profile Picture"></v-file-input>
+    <v-file-input accept="image/*" prepend-icon="mdi-camera" label="Upload Profile Picture" v-model="user.profilePicture"></v-file-input>
     
     <v-btn
       :disabled="!valid"
       @click="submit"
-    >
+    > 
       Submit
     </v-btn>
   </v-form>
@@ -94,23 +96,35 @@
 </template>
 <script>
 export default {
-        data: () => ({ 
-
-      gender: [
-        'Item 1',
-        'Item 2',
-        'Item 3',
-        'Item 4',
-      ],
-    }),
-
+        data: function () {
+        return {
+            gender:['male','female','others' ],
+            type:['public','private'],
+            domain:['business','personal'],
+            user: {
+                userId: '',
+                userName: '',
+                userEmailId: '',
+                userCity: '',
+                userDateOfBirth: "",
+                typeOfProfile: '',
+                domainOfProfile: '',
+                userGender: '',
+                personalDescription: '',
+                profilePicture: '',
+            },
+            successMessage:""
+        }
+    },          
 methods: {
    submit: function(){
-       this.$store.dispatch('editProfile'); 
+       this.$store.dispatch('editProfile',{
+           data: this.data,
+       }); 
        this.$router.push('/profile'); 
-   }
+   } 
 }
-}
+}  
 </script>
 <style> 
 .container{   

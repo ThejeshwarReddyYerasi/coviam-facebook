@@ -43,12 +43,44 @@
             </v-img>
           </v-row>
           <v-row style="margin-top:5px">
-            <video class="boxMarginCenter" width="320" height="240" controls>
-              <source src="" type="video/mp4">
-            </video>
+            <!-- <video class="boxMarginCenter" width="320" height="240" controls> -->
+              <!-- <source src="" type="video/mp4"> -->
+            <!-- </video> -->
           </v-row>
+          <v-divider></v-divider>
+          <v-row>
+            <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like</span></v-btn></v-col>
+            <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike</span></v-btn></v-col>
+            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a @click.stop="reactions">13 other reactions</a></div></v-col>
+            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a @click="comments">14 comments</a></div></v-col>
+          </v-row>
+          <v-divider></v-divider>
+          <v-row style="margin-bottom:10px">
+            <input type="text" id="comment" placeholder="Comment">
+          </v-row>
+          <v-divider></v-divider>
+          <div>
+            <v-row style="margin-top:10px">
+            <v-col style="text-align:left" lg="12">
+              <v-avatar style="margin-left:10px" size="40">
+                <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+              </v-avatar>
+               comment comment comment
+            </v-col>
+            <v-col style="text-align:right">
+              comment comment comment
+              <v-avatar>
+                <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+              </v-avatar>
+            </v-col>
+          </v-row>
+          <v-divider></v-divider>
+          </div>
         </v-col>
       </v-row>
+      <v-dialog v-model="dialog">
+        dialog
+      </v-dialog>
     </v-container>
   </v-container>
 </template>
@@ -57,12 +89,19 @@
 export default {
   name: 'Profile',
   data: () => ({
+    showComments:true,
+    dialog:false,
     posts:[
       {
 
       }
     ]
   }),
+  methods:{
+    reactions(){
+      this.dialog = true
+    }
+  }
 };
 </script>
 <style scoped>
@@ -74,5 +113,15 @@ export default {
 }
 .boxTextLeft{
   text-align: left!important
+}
+#comment{
+  width:80%;
+  height: 40px;
+  background-color: #F2F3F5;
+  margin:auto;
+  padding:10px;
+  margin-top: 10px;
+  border-radius: 50px;
+  outline: none
 }
 </style>

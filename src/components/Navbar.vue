@@ -6,7 +6,7 @@
             <v-icon large color="#ffffff">fab fa-facebook-square</v-icon>
           </v-col>
           <v-col lg="5">
-            <v-autocomplete id="search" 
+            <v-autocomplete
             solo
             :loading="loading"
             style="width:100%;height:20px" 
@@ -44,7 +44,16 @@
 export default {
   name: 'navbar',
   data: () => ({
-    items:[],
+    items:['Alabama',
+          'Alaska',
+          'American Samoa',
+          'Arizona',
+          'Arkansas',
+          'California',
+          'Colorado',
+          'Connecticut',
+          'Delaware',
+          'District of Columbia',],
     select:null,
     search:null,
     loading:false,
