@@ -4,7 +4,9 @@ import Home from '../components/Home.vue'
 import Notifications from '../components/Notifications.vue'
 import Request from '../components/Requests.vue'
 import Profile from '../components/Profile.vue'
-
+import EditProfile from '../components/EditProfile.vue'
+import Category from '../components/Category.vue'
+import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -28,6 +30,21 @@ const routes = [
     name: 'notifications',
     component: Notifications
   },
+  { 
+    path:'/editProfile',
+    name: 'editProfile',
+    component: EditProfile
+  },
+  {
+    path: '/category',
+    name: 'category',
+    component: Category
+  },
+  {
+    path:'/businessadvertisement',
+    name:'BusinessAdvertisement',
+    component: BusinessAdvertisement
+  }
 ]
 
 const router = new VueRouter({
