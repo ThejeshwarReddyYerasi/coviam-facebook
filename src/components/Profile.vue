@@ -7,22 +7,32 @@
         </v-avatar>
       </v-col>
       <v-col>
-        <v-row><v-icon style="padding-right:5px">fas fa-globe-americas</v-icon><b>Intro</b></v-row>
-       <v-row>Description</v-row>
-       <v-row>Thejeshwar reddy yerasi</v-row>
-       <v-row>personal</v-row>
-       <v-row>public</v-row>
-       <v-row>email id</v-row>
-       <v-row>city</v-row>
-       <v-row>gender</v-row>
-       <v-row>age</v-row>
+       <v-row>
+         <v-col>
+            <v-row><v-icon style="padding-right:5px">fas fa-globe-americas</v-icon><b>Intro</b></v-row>
+            <v-row>Description</v-row>
+            <v-row>Thejeshwar reddy yerasi</v-row>
+            <v-row>email id</v-row>
+            <v-row>city</v-row>
+            <v-row>gender</v-row>
+            <v-row>age</v-row>
+         </v-col>
+         <v-col>
+            <v-row>personal</v-row>
+            <v-row>public</v-row>
+            <v-row style="margin-top:10px">
+              <v-dialog v-model="friendsDialog" max-width="290">
+                <template v-slot:activator>
+                  <v-btn text @click.stop="invert()" style="background-color:#4267B2;color:white"><span>Friends</span></v-btn>
+                </template>
+              </v-dialog>
+            </v-row>
+         </v-col>
+       </v-row>
       </v-col>
     </v-row>
     <v-container>
       <v-row>
-        <!-- <v-col lg="4">
-          v-row
-        </v-col> -->
         <v-col lg="8" class="boxColor boxMarginCenter">
           <v-row>
             <v-col lg="2">
@@ -52,7 +62,7 @@
             <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like</span></v-btn></v-col>
             <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike</span></v-btn></v-col>
             <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a @click.stop="reactions">13 other reactions</a></div></v-col>
-            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a @click="comments">14 comments</a></div></v-col>
+            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>14 comments</a></div></v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
@@ -86,10 +96,12 @@
 </template>
 
 <script>
+// import axios from 'axios'
 export default {
   name: 'Profile',
   data: () => ({
     showComments:true,
+    friendsDialog:false,
     dialog:false,
     posts:[
       {
@@ -100,7 +112,14 @@ export default {
   methods:{
     reactions(){
       this.dialog = true
+    },
+    invert(){
+      window.console.log("invert")
+      this.friendsDialog = true
     }
+  },
+  created(){
+    // axios.get('')
   }
 };
 </script>

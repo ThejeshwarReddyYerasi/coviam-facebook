@@ -1,5 +1,5 @@
 <template>
-    <div class="container1">
+    <div class="container">
       <v-divider
         class="mx-4"
         :inset="inset"
@@ -41,7 +41,9 @@ export default {
 };
 </script>
 <style scoped>
-
+.container{
+  width:1200px; 
+}
 .mx-auto{
   color:lightblue;
   cursor:pointer
