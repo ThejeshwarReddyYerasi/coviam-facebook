@@ -11,16 +11,16 @@
        <v-row>
          <v-col>
             <v-row><v-icon style="padding-right:5px">fas fa-globe-americas</v-icon><b>Intro</b></v-row>
-            <v-row>Description</v-row>
-            <v-row>Thejeshwar reddy yerasi</v-row>
-            <v-row>email id</v-row>
-            <v-row>city</v-row>
-            <v-row>gender</v-row>
-            <v-row>age</v-row>
+            <v-row>{{profileDetails.personalDescription}}</v-row>
+            <v-row>{{profileDetails.userFirstName}} {{profileDetails.userLastName}}</v-row>
+            <v-row>{{profileDetails.userEmailId}}</v-row>
+            <v-row>{{profileDetails.userGender}}</v-row>
+            <v-row>{{profileDetails.userDateOfBirth}}</v-row>
+            <v-row>{{profileDetails.userCity}}</v-row>
          </v-col>
          <v-col>
-            <v-row>personal</v-row>
-            <v-row>public</v-row>
+            <v-row>{{profileDetails.domainOfProfile}}</v-row>
+            <v-row>{{profileDetails.typeOfProfile}}</v-row>
             <v-row style="margin-top:10px">
               <template>
               <div class="text-center">
@@ -179,10 +179,16 @@ export default {
     friendsDialog:false,
     commentInput:false,
     bottom: false,
+    profileDetails:{},
+    friendsList:[],
     posts:[]
   }),
   methods:{
     getFriendsList(){
+      axios.get('http://10.177.68.8:8082/friends/getList/50d57520-0171-4756-a104-8fec92660959')
+      .then(function(response){
+        window.console.log(response.data)
+      })
       window.console.log("getfriendslist")
     },
     getReactionsOnPost(){
@@ -206,23 +212,32 @@ export default {
       return bottomOfPage || pageHeight < visible
     },
      getPosts() {
-      axios.get('https://api.punkapi.com/v2/beers/random')
-        .then(response => {
-          let api = response.data[0];
-          let apiInfo = {
-            name: api.name,
-            desc: api.description,
-            img: api.image_url,
-            tips: api.brewers_tips,
-            tagline: api.tagline,
-            food: api.food_pairing
-          };
-          this.posts.push(apiInfo)
-          window.console.log(this.posts)
-        })
+      // axios.get('https://api.punkapi.com/v2/beers/random')
+      //   .then(response => {
+      //     let api = response.data[0];
+      //     let apiInfo = {
+      //       name: api.name,
+      //       desc: api.description,
+      //       img: api.image_url,
+      //       tips: api.brewers_tips,
+      //       tagline: api.tagline,
+      //       food: api.food_pairing
+      //     };
+      //     this.posts.push(apiInfo)
+      //     window.console.log(this.posts)
+      //   })
     }
   },
   created(){
+    let that = this
+    axios.get('http://10.177.68.8:8082/user/343')
+    .then(function(response){
+      that.profileDetails = response.data.data;
+      // window.console.log(that.profileDetails)
+    })
+    .catch(function(response){
+      window.console.log(response)
+    })
     window.addEventListener('scroll', () => {
       this.bottom = this.bottomVisible()
     })

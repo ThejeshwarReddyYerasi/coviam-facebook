@@ -34,6 +34,7 @@
               <v-icon class="navbarButton" >fas fa-user-friends</v-icon>
             </v-btn>
           </v-col>
+          <v-col><v-btn icon class="navbarButton" @click="$router.push({path:'/editProfile'})"><v-icon>fas fa-user</v-icon></v-btn></v-col>
         </v-row>
     </v-toolbar>
   </div>
@@ -65,6 +66,7 @@ export default {
     querySelections (v) {
       this.loading = true
       window.console.log(v)
+      
       setTimeout(() => {
           this.items = this.states.filter(e => {
             return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
@@ -75,8 +77,9 @@ export default {
   },
   watch:{
     search (val){
-      if(val==''){this.items=[]}
-      val && val !== this.select && this.querySelections(val)
+      if(val==''){this.items=[]}else{
+        val && val !== this.select && this.querySelections(val)
+      }
     }
   }
 }
