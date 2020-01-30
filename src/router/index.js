@@ -5,6 +5,7 @@ import Notifications from '../components/Notifications.vue'
 import Request from '../components/Requests.vue'
 import Profile from '../components/Profile.vue'
 import EditProfile from '../components/EditProfile.vue'
+import Login from '../components/Login.vue'
 import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
 Vue.use(VueRouter)
@@ -34,6 +35,11 @@ const routes = [
     path:'/editProfile',
     name: 'editProfile',
     component: EditProfile
+  },
+  { 
+    path:'/login',
+    name: 'login',
+    component: Login
   },
   {
     path: '/category',

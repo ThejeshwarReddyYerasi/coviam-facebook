@@ -1,7 +1,8 @@
 <template>
 <div class="container">
     <div class="title" style="font-weight:bold">
-        Edit Profile</div>
+        Edit Profile
+    </div>
         <br> 
     <v-form
     align-content="center"
