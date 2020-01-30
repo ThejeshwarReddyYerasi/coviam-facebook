@@ -44,16 +44,7 @@
 export default {
   name: 'navbar',
   data: () => ({
-    items:['Alabama',
-          'Alaska',
-          'American Samoa',
-          'Arizona',
-          'Arkansas',
-          'California',
-          'Colorado',
-          'Connecticut',
-          'Delaware',
-          'District of Columbia',],
+    items:[],
     select:null,
     search:null,
     loading:false,
@@ -74,17 +65,17 @@ export default {
     querySelections (v) {
       this.loading = true
       window.console.log(v)
-      this.items = this.states
-      // axios.get('https://api.coinmarketcap.com/v2/listings/')
-      // .then(function(response){
-      //   window.console.log(response)
-      // })
-      // setTimeout()
-      this.loading = false
+      setTimeout(() => {
+          this.items = this.states.filter(e => {
+            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
+          })
+          this.loading = false
+        }, 500)
     },
   },
   watch:{
     search (val){
+      if(val==''){this.items=[]}
       val && val !== this.select && this.querySelections(val)
     }
   }

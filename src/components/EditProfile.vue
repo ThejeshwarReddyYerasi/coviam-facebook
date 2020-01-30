@@ -127,7 +127,7 @@ methods: {
 }
 }  
 </script>
-<style> 
+<style scoped> 
 .container{   
     width:500px; 
     align-self:center;  

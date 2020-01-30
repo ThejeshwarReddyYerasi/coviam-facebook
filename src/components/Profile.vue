@@ -1,5 +1,6 @@
 <template>
-  <v-container>
+  <v-container id="app">
+<v-app>
     <v-row class="boxColor">
       <v-col lg="4">
         <v-avatar size="250">
@@ -21,11 +22,46 @@
             <v-row>personal</v-row>
             <v-row>public</v-row>
             <v-row style="margin-top:10px">
-              <v-dialog v-model="friendsDialog" max-width="290">
-                <template v-slot:activator>
-                  <v-btn text @click.stop="invert()" style="background-color:#4267B2;color:white"><span>Friends</span></v-btn>
-                </template>
-              </v-dialog>
+              <template>
+              <div class="text-center">
+                <v-dialog scrollable
+                  v-model="friendsDialog"
+                  width="500"
+                >
+                  <template v-slot:activator="{ on }">                    
+                      <v-btn text @click.stop="getFriendsList()" v-on="on" style="background-color:#4267B2;color:white"><span>Friends</span></v-btn>
+                  </template>
+                  <v-card height="700px">
+                    <v-card-title
+                      class="headline grey lighten-2"
+                      primary-title
+                    >
+                      Friends List
+                    </v-card-title>
+
+                    <v-card-text>
+                      <v-row>
+                        friends name
+                      </v-row>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="primary"
+                        text
+                        @click="friendsDialog = false"
+                      >
+                        close
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
+            </template>
+
             </v-row>
          </v-col>
        </v-row>
@@ -61,65 +97,143 @@
           <v-row>
             <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like</span></v-btn></v-col>
             <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike</span></v-btn></v-col>
-            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a @click.stop="reactions">13 other reactions</a></div></v-col>
+            <v-col>
+              <div style="margin-right:5px;margin-top:7px;cursor:pointer">
+                <v-dialog scrollable
+                  v-model="reactionsDialog"
+                  width="500"
+                >
+                  <template v-slot:activator="{ on }">                    
+                  <a @click.stop="getReactionsOnPost()" v-on="on">13 other reactions</a>
+                  </template>
+                  <v-card height="700">
+                    <v-card-title
+                      class="headline grey lighten-2"
+                      primary-title
+                    >
+                      Reactions
+                    </v-card-title>
+                    <v-card-text>
+                      <v-row>
+                        friends likes
+                      </v-row>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="primary"
+                        text
+                        @click="reactionsDialog = false"
+                      >
+                        close
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
+            </v-col>
             <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>14 comments</a></div></v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
-            <input type="text" id="comment" placeholder="Comment">
+            <input type="text" id="comment" placeholder="Comment" @keydown.enter="addNewComment()">
           </v-row>
           <v-divider></v-divider>
           <div>
-            <v-row style="margin-top:10px">
-            <v-col style="text-align:left" lg="12">
-              <v-avatar style="margin-left:10px" size="40">
-                <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-              </v-avatar>
-               comment comment comment
-            </v-col>
-            <v-col style="text-align:right">
-              comment comment comment
-              <v-avatar>
-                <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-              </v-avatar>
-            </v-col>
-          </v-row>
+            <v-row style="margin-top:10px" class="boxTextLeft">
+              <v-col lg="1">
+                <v-avatar style="margin-left:10px" size="40">
+                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                </v-avatar>
+              </v-col>
+              <v-col lg="11" style="padding-left:15px">
+                <v-row>comment comment</v-row>
+                <v-row><a @click="showCommentInput()">Reply</a></v-row>
+                <input type="text" id="comment" v-if="commentInput" @keydown.enter="addComment()" placeholder="Reply">
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col style="text-align:right">
+                comment comment comment
+                <v-avatar>
+                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                </v-avatar>
+              </v-col>
+            </v-row>
           <v-divider></v-divider>
           </div>
         </v-col>
       </v-row>
-      <v-dialog v-model="dialog">
-        dialog
-      </v-dialog>
     </v-container>
+</v-app>
   </v-container>
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 export default {
   name: 'Profile',
   data: () => ({
-    showComments:true,
+    reactionsDialog:false,
     friendsDialog:false,
-    dialog:false,
-    posts:[
-      {
-
-      }
-    ]
+    commentInput:false,
+    bottom: false,
+    posts:[]
   }),
   methods:{
-    reactions(){
-      this.dialog = true
+    getFriendsList(){
+      window.console.log("getfriendslist")
     },
-    invert(){
-      window.console.log("invert")
-      this.friendsDialog = true
+    getReactionsOnPost(){
+      window.console.log("getReactionsOnPost")
+    },
+    addNewComment(){
+      window.console.log("addNewComment")//no empty comments
+    },
+    showCommentInput(){
+      this.commentInput = true;
+    },
+    addComment(){
+      window.console.log("addComment");
+      this.commentInput = false;
+    },
+     bottomVisible() {
+      const scrollY = window.scrollY
+      const visible = document.documentElement.clientHeight
+      const pageHeight = document.documentElement.scrollHeight
+      const bottomOfPage = visible + scrollY >= pageHeight
+      return bottomOfPage || pageHeight < visible
+    },
+     getPosts() {
+      axios.get('https://api.punkapi.com/v2/beers/random')
+        .then(response => {
+          let api = response.data[0];
+          let apiInfo = {
+            name: api.name,
+            desc: api.description,
+            img: api.image_url,
+            tips: api.brewers_tips,
+            tagline: api.tagline,
+            food: api.food_pairing
+          };
+          this.posts.push(apiInfo)
+          window.console.log(this.posts)
+        })
     }
   },
   created(){
-    // axios.get('')
+    window.addEventListener('scroll', () => {
+      this.bottom = this.bottomVisible()
+    })
+    this.getPosts()
+  },
+  watch: {
+    bottom(bottom) {
+      if (bottom) {
+        this.getPosts()
+      }
+    }
   }
 };
 </script>
