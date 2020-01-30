@@ -1,19 +1,14 @@
 <template>
   <v-container>
-    <div class='main'>
         <v-row>
-          <v-col>
-            <div class='newsfeed'>
+          <v-col lg="8">
+            
             <CreatePosts></CreatePosts>
-            </div>
           </v-col>
-          <v-col>
-            <div class='ads'>
-              This is the Ads Div
-            </div>
+          <v-col lg="4">
+             adds
           </v-col>
         </v-row>
-    </div>
   </v-container>
 </template>
 
