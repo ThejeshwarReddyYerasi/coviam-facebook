@@ -1,49 +1,56 @@
 <template>
-  <div>
-      <div class="first">
-      <div class="parent">
-      <h1>Sign Up</h1><br>
-      
-      <form action="">
-        <input type="text" name="userName" placeholder="UserName"><br><br>
-        <input type="password" name="password" placeholder="password"><br><br>
-        <input type="email" name="email" placeholder="E-Mail"><br><br>
-        <input type="number" name="phoneNumber" placeholder="Phone-Number"><br><br>
-       
-        <button value="submit">Submit</button>
-      </form>
-      </div>
-      </div>
+  <div id="app">
+      <v-app>
+          <v-card id="outer" class="mx-auto" style="margin-top:10%">
+              <v-row>
+                  <v-col>Sign Up</v-col>
+              </v-row>
+              <div id="inner">
+                <input type="text" name="userName" placeholder="UserName" class="input"><br><br>
+                <input type="email" name="email" placeholder="E-Mail" class="input"><br><br>
+                <input type="password" name="password" placeholder="password" class="input"><br><br>
+                <!-- <input type="number" name="phoneNumber" placeholder="Phone-Number" class="input"><br><br> -->
+                 <v-select
+                    :items="items"
+                    label="Type Of Profile"
+                    solo
+                    flat
+                    color="#E9EBEE"
+                ></v-select>
+                <v-btn color="#4267B2" style="color:white;width:60%">Submit</v-btn>
+                <v-btn color="#4267B2" style="color:white;width:60%;margin-top:30px;margin-bottom:30px" @click="$router.push({path:'/login'})">Login</v-btn>
+              </div>
+            </v-card>
+      </v-app>
   </div>
 </template>
 
 <script>
 export default {
-
+    data:function(){
+        return{
+            items: ['Public','Private','Business'],
+        }
+    }
 }
 </script>
 
 <style scoped>
- .parent{
-    background-color: lightgray;
-    
-    align-content: center;
-    display: inline;
-}
-.first{
-    width: 100%;
-    background-color:lightgray;
-}
-input{
-    background-color: white;
-    border-style: groove;
-}
+ #outer{
+     width: 500px
+       
+ }
+ #inner{
+     margin: auto;
+     width: 80%;
 
-button{
-    background-color:#4267b2;
-    color:white;
-    width:100px;
-    border-radius: 4px;
-    font-weight: bold;
+ }
+.input{
+    outline: none;
+    border: none;
+    background-color: #E9EBEE;
+    height:40px;
+    width: 100%;
+    padding: 10px
 }
 </style>

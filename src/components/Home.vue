@@ -48,7 +48,7 @@ export default {
 }
 .main{
   width:100%;
-  height:900px;
+  /* height:900px; */
   background: #e9ebee;
 }
 .postcreate{

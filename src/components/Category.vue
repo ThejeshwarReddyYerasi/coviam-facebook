@@ -131,7 +131,7 @@ button{
     flex-direction: row;
     flex-wrap: wrap;
     border-style: outset;
-    height: 13vh;
+    /* height: 13vh; */
     float: left;
     overflow: auto;
     

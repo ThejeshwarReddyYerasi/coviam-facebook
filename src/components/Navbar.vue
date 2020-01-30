@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="#4267B2">
+    <v-toolbar color="#4267B2" v-if="show"> 
         <v-row>
           <v-col lg="1" style="text-align:right;margin-top:5px">
             <v-icon large color="#ffffff">fab fa-facebook-square</v-icon>
@@ -46,6 +46,7 @@ export default {
   name: 'navbar',
   data: () => ({
     items:[],
+    show:true,
     select:null,
     search:null,
     loading:false,
@@ -74,6 +75,11 @@ export default {
           this.loading = false
         }, 500)
     },
+  },
+  created(){
+    // if(localStorage.getItem('user-token')==null){
+    //   this.show=false
+    // }
   },
   watch:{
     search (val){

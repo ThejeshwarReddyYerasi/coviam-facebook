@@ -24,7 +24,7 @@
             <v-row style="margin-top:10px">
               <template>
               <div class="text-center">
-                <v-dialog scrollable
+                <v-dialog 
                   v-model="friendsDialog"
                   width="500"
                 >
@@ -99,7 +99,7 @@
             <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike</span></v-btn></v-col>
             <v-col>
               <div style="margin-right:5px;margin-top:7px;cursor:pointer">
-                <v-dialog scrollable
+                <v-dialog 
                   v-model="reactionsDialog"
                   width="500"
                 >

@@ -2,14 +2,14 @@
   <main>
     <body>
       <div class="Login">
-        <h3>LOGIN</h3>
+        <h3 style="margin-top:20px">Sign In</h3>
         <div>
-          <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="margin-top:10%"></div>
+          <div style="margin-top:10%"></div>
           <input
             v-model="username"
             class="username input"
             type="text"
-            placeholder="username"
+            placeholder="Email"
           />
           <input
             v-model="password"
@@ -18,11 +18,13 @@
             placeholder="Password"
           /> 
           <div class="Loginbuttoncontainer">
-            <button @click="submitClicked" class="submitbutton">Login</button>
+            <v-btn @click="submitClicked" class="button">Login</v-btn>
+          </div>
+          <div>
+            <v-btn @click="$router.push({path:'/signup'})" class="button">Sign Up</v-btn>
           </div>
         </div>
       </div>
-      <router-view />
     </body>
   </main>
 </template>
@@ -60,14 +62,13 @@ export default {
 </script>
 <style scoped>
 .Login {
-  background-color: #e9e9e9;
+  background-color: white;
   margin-left: 30%;
   margin-right: 30%;
   padding-bottom: 30px;
   padding-top: 2px;
   padding-left: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-
   margin-top: 100px;
 }
 .input {
@@ -78,6 +79,7 @@ export default {
   width: 90%;
   margin-bottom: 20px;
   padding: 5px;
+  outline: none
 }
 .fa {
   padding: 20px;
@@ -97,17 +99,15 @@ export default {
   margin: 5px;
 }
 
-.submitbutton {
-  padding: 10px 30px 10px 30px;
-  background-color:#4267B2;
+.button{
+  background-color: #4267B2!important;
+  width: 60%;
   color: white;
-  border-radius: 10px;
-  cursor: pointer;
-transition: all 0.4s ease 0s;
+  margin: 30px
 }
-.submitbutton:hover{
+/* .submitbutton:hover{
     background: #0C8699;
-}
+} */
 .Loginbuttoncontainer {
   display: flex;
   justify-content: center;

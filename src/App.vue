@@ -13,8 +13,13 @@ export default {
     navbar,
   },
   data: () => ({
-    
   }),
+  created(){
+    // if(localStorage.getItem('user-token')==null){
+    //   this.$router.push({path:'/login'})
+
+    // }
+  }
 };
 </script>
 
