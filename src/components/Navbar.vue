@@ -70,7 +70,7 @@ export default {
             return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
           })
           this.loading = false
-        }, 1000)
+        }, 500)
     },
   },
   watch:{
