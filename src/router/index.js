@@ -8,6 +8,7 @@ import EditProfile from '../components/EditProfile.vue'
 import Login from '../components/Login.vue'
 import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
+import SignUp from '../components/SignUp.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -50,6 +51,11 @@ const routes = [
     path:'/businessadvertisement',
     name:'BusinessAdvertisement',
     component: BusinessAdvertisement
+  },
+  {
+    path:'/signup',
+    name:'SignUp',
+    component: SignUp
   }
 ]
 
