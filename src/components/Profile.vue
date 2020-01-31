@@ -154,18 +154,18 @@
             <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment('new')">
           </v-row>
           <v-divider></v-divider>
-          <div>
+          <div v-for="(comment,i) in item.Comments" :key="i">
             <v-row style="margin-top:10px" class="boxTextLeft">
-              <v-col lg="1">
+              <!-- <v-col lg="1">
                 <v-avatar style="margin-left:10px" size="40">
                   <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
                 </v-avatar>
-              </v-col>
+              </v-col> -->
               <v-col lg="11" style="padding-left:15px">
-                <v-row>comment comment</v-row>
+                <v-row>{{comment.commentDescription}}</v-row>
                 <v-row>
                   <a @click="showCommentInput($event)">Reply</a>
-                <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment('123','34',$event)" placeholder="Reply">
+                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment('123','34',$event)" placeholder="Reply">
                 </v-row>
               </v-col>
             </v-row>
@@ -198,7 +198,7 @@ export default {
     commentInput:false,
     bottom: false,
     pageNo:0,
-    pageSize:1,
+    pageSize:2,
     comment:'',
     subComment:'',
     profileDetails:{},
@@ -258,11 +258,12 @@ export default {
       let that = this
       axios.get(`http://172.16.20.133:8080/post/getUserPost/user2/${that.pageNo}/${that.pageSize}`)
       .then(function(response){
+        window.console.log(response.data)
         response.data.data.forEach(element => {
           that.posts.push(element)
         });
         that.pageNo++;
-        window.console.log(that.posts)
+        // window.console.log(that.posts)
       })
         // .then(response => {
         //   let api = response.data[0];
