@@ -2,7 +2,7 @@
   <div class="friend">
     <div v-for="(iterator,index) in list" :key="index" class="profile">
        <div class="image">
-          <img :src="iterator.imageLink" width="100" height="100">
+          <img :src="iterator.imageLink" width="100" height="100"> 
           <h3><b>{{iterator.name}}</b></h3>
        </div>
         
@@ -17,8 +17,9 @@
 </template>
 
 <script>
+// import { mapGetters, mapActions } from 'vuex'
 export default {
-    name:'FriendRequest',
+    // name:'FriendRequest',
     data: () => ({
         
        list:[
@@ -32,10 +33,20 @@ export default {
            }
        ]
     }),
+    computed: {
+    //     ...mapGetters([
+    //   'friendRequests',
+    // ])
+    },
+    created() {
+        // this.getFriendRequests({ 
+        // })
+    },
     methods:{
-        fun:function(){
-            alert('disabled')
-        }
+    //   ...mapActions([
+    // 'getFriendRequests'
+    // ]),
+        
     }
 };
 </script>

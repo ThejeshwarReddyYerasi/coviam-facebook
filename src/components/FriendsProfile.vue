@@ -17,7 +17,7 @@
             <v-row>{{profileDetails.userGender}}</v-row>
             <v-row>{{profileDetails.userDateOfBirth}}</v-row>
             <v-row>{{profileDetails.userCity}}</v-row>
-         </v-col>
+         </v-col> 
          <v-col>
             <v-row>{{profileDetails.domainOfProfile}}</v-row>
             <v-row>{{profileDetails.typeOfProfile}}</v-row>

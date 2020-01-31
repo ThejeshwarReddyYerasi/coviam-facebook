@@ -33,6 +33,10 @@
 <script>
 //import Vuetify from 'vuetify/lib'
 //import VueFlex from "vue-flex";
+// Retrieve Firebase Messaging object.
+//const messaging = firebase.messaging();
+// Add the public key generated from the console here.
+//messaging.usePublicVapidKey("BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu");
 export default {
   name: 'Notifications',
   data: () => ({
@@ -42,7 +46,7 @@ export default {
 </script>
 <style scoped>
 .container{
-  width:1200px; 
+  width:120npm 0px; 
 }
 .mx-auto{
   color:lightblue;
