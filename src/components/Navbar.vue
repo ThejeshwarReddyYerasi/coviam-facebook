@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div id="app">
+    <!-- <v-app> -->
     <v-toolbar color="#4267B2" v-if="show"> 
         <v-row>
           <v-col lg="1" style="text-align:right;margin-top:5px">
@@ -37,11 +38,12 @@
           <v-col><v-btn icon class="navbarButton" @click="$router.push({path:'/editProfile'})"><v-icon>fas fa-user</v-icon></v-btn></v-col>
         </v-row>
     </v-toolbar>
+    <!-- </v-app> -->
   </div>
 </template>
 
 <script>
-// import axios from 'axios'
+ import axios from 'axios'
 export default {
   name: 'navbar',
   data: () => ({
@@ -65,15 +67,25 @@ export default {
   }),
   methods:{
     querySelections (v) {
+      let that = this
       this.loading = true
-      window.console.log(v)
-      
-      setTimeout(() => {
-          this.items = this.states.filter(e => {
-            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-          })
-          this.loading = false
-        }, 500)
+      window.console.log(v);
+      axios.get("http://172.16.20.202:7007/facebooksearch/search/"+v)
+      .then(function(response){
+        that.items = []
+        response.data.forEach(element => {
+          that.items.push(element.userFirstName)
+        });
+        window.console.log(that.items)
+        that.loading = false
+      }); 
+
+      // setTimeout(() => {
+      //     this.items = this.states.filter(e => {
+      //       return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
+      //     })
+      //     this.loading = false
+      //   }, 500)
     },
   },
   created(){
@@ -86,6 +98,9 @@ export default {
       if(val==''){this.items=[]}else{
         val && val !== this.select && this.querySelections(val)
       }
+    },
+    select() {
+      this.$router.push('/profile')
     }
   }
 }
