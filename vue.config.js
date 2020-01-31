@@ -8,11 +8,11 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '^/backend': {
-        target: 'http://10.177.68.116:8111/',
+      '^/backendCommonInfraLogin': {
+        target: 'http://172.16.20.121:8080/',
         ws: true,
         changeOrigin: true,
-        pathRewrite: {'^/backend' : ''}
+        pathRewrite: {'^/backendCommonInfraLogin' : ''}
       }
     }
   },
