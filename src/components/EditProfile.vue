@@ -90,7 +90,7 @@ export default {
 methods: {
    submit: function(){
        this.$store.dispatch('editProfile',{
-           data: this.data,
+           data: this.user,
        }); 
        this.$router.push('/profile'); 
    } 
