@@ -1,5 +1,6 @@
 <template>
   <main>
+
     <body>
       <div class="Login">
         <h3 style="margin-top:20px">Sign In</h3>
@@ -16,12 +17,18 @@
             class="password input"
             type="Password"
             placeholder="Password"
-          /> 
+          />
           <div class="Loginbuttoncontainer">
-            <v-btn @click="submitClicked" class="button">Login</v-btn>
+            <v-btn
+              @click="submitClicked"
+              class="button("
+            >Login</v-btn>
           </div>
           <div>
-            <v-btn @click="$router.push({path:'/signup'})" class="button">Sign Up</v-btn>
+            <v-btn
+              @click="$router.push({path:'/signup'})"
+              class="button"
+            >Sign Up</v-btn>
           </div>
         </div>
       </div>
@@ -30,35 +37,33 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
- 
   name: "login",
   data: function() {
     return {
       username: "",
       password: "",
-      loginType: "customer"
+      loginType: "customer",
+      accessToken: "",
     };
   },  
   methods: {
     submitClicked() {
       //let self = this
       let data = {
-        email: this.username,
+        emailAddress: this.username,
         password: this.password,
-      };
-      this.$store.dispatch("loginUser", {
-        data: data,
-        success: function() {  
-          this.$router.push('/home')
-        }, 
-        fail: function() {
-          window.console.log("login failed ...");
-        }
-      });
+      }
+      window.console.log(data)
+      axios.post('/backendCommonInfraLogin/controller/login',data)
+      .then(function(response){
+                window.console.log(response.data.data)
+                localStorage.setItem('accessToken',response.data.data)
+      })
     }
   }
-};
+}
 </script>
 <style scoped>
 .Login {
@@ -79,7 +84,7 @@ export default {
   width: 90%;
   margin-bottom: 20px;
   padding: 5px;
-  outline: none
+  outline: none;
 }
 .fa {
   padding: 20px;
@@ -99,11 +104,11 @@ export default {
   margin: 5px;
 }
 
-.button{
-  background-color: #4267B2!important;
+.button {
+  background-color: #4267b2 !important;
   width: 60%;
   color: white;
-  margin: 30px
+  margin: 30px;
 }
 /* .submitbutton:hover{
     background: #0C8699;
