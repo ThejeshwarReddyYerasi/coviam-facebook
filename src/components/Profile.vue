@@ -82,7 +82,7 @@
       </v-col>
     </v-row>
     <v-container>
-      <v-row v-for="(items,index) in posts" :key="index">
+      <v-row v-for="(item,index) in posts" :key="index">
         <v-col lg="8" class="boxColor boxMarginCenter">
           <v-row>
             <v-col lg="2">
@@ -92,14 +92,14 @@
             </v-col>
             <v-col lg="10">
               <v-row>Name</v-row>
-              <v-row>Time</v-row>
+              <v-row>{{item.postDate}}</v-row>
             </v-col>
           </v-row>
           <v-row>
-            <v-container class="boxTextLeft">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution</v-container>
+            <v-container class="boxTextLeft">{{item.postDescription}}</v-container>
           </v-row>
           <v-row>
-            <v-img class="boxMarginCenter" max-height="300" max-width="700" src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" :contain="true">
+            <v-img class="boxMarginCenter" max-height="300" max-width="700" :src="item.postImageUrl" :contain="true">
             </v-img>
           </v-row>
           <v-row style="margin-top:5px">
@@ -109,8 +109,8 @@
           </v-row>
           <v-divider></v-divider>
           <v-row>
-            <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like</span></v-btn></v-col>
-            <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike</span></v-btn></v-col>
+            <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like{{item.counterOfLikes}}</span></v-btn></v-col>
+            <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike{{item.counterOfDislilkes}}</span></v-btn></v-col>
             <v-col>
               <div style="margin-right:5px;margin-top:7px;cursor:pointer">
                 <v-dialog 
@@ -118,7 +118,7 @@
                   width="500"
                 >
                   <template v-slot:activator="{ on }">                    
-                  <a @click.stop="getReactionsOnPost()" v-on="on">13 other reactions</a>
+                  <a @click.stop="getReactionsOnPost()" v-on="on">{{item.counterOfEmojis}} other reactions</a>
                   </template>
                   <v-card height="700">
                     <v-card-title
@@ -147,11 +147,11 @@
                 </v-dialog>
               </div>
             </v-col>
-            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>14 comments</a></div></v-col>
+            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{item.counterOfComments}} comments</a></div></v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
-            <input type="text" id="comment" placeholder="Comment" @keydown.enter="addNewComment()">
+            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment('new')">
           </v-row>
           <v-divider></v-divider>
           <div>
@@ -163,13 +163,17 @@
               </v-col>
               <v-col lg="11" style="padding-left:15px">
                 <v-row>comment comment</v-row>
-                <v-row><a @click="showCommentInput()">Reply</a></v-row>
-                <input type="text" id="comment" v-if="commentInput" @keydown.enter="addComment()" placeholder="Reply">
+                <v-row>
+                  <a @click="showCommentInput($event)">Reply</a>
+                <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment('123','34',$event)" placeholder="Reply">
+                </v-row>
               </v-col>
             </v-row>
             <v-row>
               <v-col style="text-align:right">
                 comment comment comment
+                  <a @click="showCommentInput($event)">Reply</a>
+                <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="replyComment('sub')" placeholder="Reply">
                 <v-avatar>
                   <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
                 </v-avatar>
@@ -194,7 +198,9 @@ export default {
     commentInput:false,
     bottom: false,
     pageNo:0,
-    pageSize:3,
+    pageSize:1,
+    comment:'',
+    subComment:'',
     profileDetails:{},
     friendsList:[],
     posts:[]
@@ -212,18 +218,34 @@ export default {
     getReactionsOnPost(){
       window.console.log("getReactionsOnPost")
     },
-    addNewComment(){
-      window.console.log("addNewComment")//no empty comments
-    },
-    showCommentInput(){
-      this.commentInput = true;
+    // addNewComment(postId,userId){
+      // let payload = {
+      //   postId: postId,
+      //   userId: userId,
+      //   commentDescription:this.comment,
+      //   commentingUserId:'user1',
+      //   parentCommentId:null
+      // }
+      // window.console.log(payload)//no empty comments
+    // },
+    showCommentInput(event){
+      event.target.nextElementSibling.classList.remove("hideInput")
     },
     goToProfile(profileId){
       window.console.log(profileId)
     },
-    addComment(){
-      window.console.log("addComment");
-      this.commentInput = false;
+    addComment(postId,userId,event){
+      window.console.log(event)
+      let payload = {
+        postId: postId,
+        userId: userId,
+        commentDescription:event.target.value,
+        commentingUserId:'user1',
+        parentCommentId:null
+      }
+      window.console.log(payload)
+      event.target.classList.add("hideInput")
+
     },
      bottomVisible() {
       const scrollY = window.scrollY
@@ -234,13 +256,13 @@ export default {
     },
      getPosts() {
       let that = this
-      axios.get(`http://10.177.68.116:8080/post/getUserPost/user2/${that.pageNo}/${that.pageSize}`,{
-        headers:{
-          userId:'user2'
-        },
-      }).then(function(response){
-        that.posts.push(response.data.data)
-        window.console.log(that.posts[0])
+      axios.get(`http://172.16.20.133:8080/post/getUserPost/user2/${that.pageNo}/${that.pageSize}`)
+      .then(function(response){
+        response.data.data.forEach(element => {
+          that.posts.push(element)
+        });
+        that.pageNo++;
+        window.console.log(that.posts)
       })
         // .then(response => {
         //   let api = response.data[0];
@@ -291,7 +313,7 @@ export default {
 .boxTextLeft{
   text-align: left!important
 }
-#comment{
+.comment{
   width:80%;
   height: 40px;
   background-color: #F2F3F5;
@@ -300,5 +322,11 @@ export default {
   margin-top: 10px;
   border-radius: 50px;
   outline: none
+}
+.hideInput{
+  display: none
+}
+.showInput{
+  display:block
 }
 </style>
