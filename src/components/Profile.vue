@@ -151,29 +151,27 @@
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
-            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment('new')">
+            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId)">
           </v-row>
           <v-divider></v-divider>
-          <div v-for="(comment,i) in item.Comments" :key="i">
+          <div v-for="(comment,i) in item.parentComments" :key="i">
             <v-row style="margin-top:10px" class="boxTextLeft">
-              <!-- <v-col lg="1">
+              <v-col lg="1">
                 <v-avatar style="margin-left:10px" size="40">
                   <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
                 </v-avatar>
-              </v-col> -->
+              </v-col>
               <v-col lg="11" style="padding-left:15px">
                 <v-row>{{comment.commentDescription}}</v-row>
                 <v-row>
                   <a @click="showCommentInput($event)">Reply</a>
-                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment('123','34',$event)" placeholder="Reply">
+                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event)" placeholder="Reply">
                 </v-row>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row v-for="(subComments,j) in comment.subComments" :key="j">
               <v-col style="text-align:right">
-                comment comment comment
-                  <a @click="showCommentInput($event)">Reply</a>
-                <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="replyComment('sub')" placeholder="Reply">
+                {{subComments.commentDescription}}
                 <v-avatar>
                   <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
                 </v-avatar>
@@ -218,32 +216,42 @@ export default {
     getReactionsOnPost(){
       window.console.log("getReactionsOnPost")
     },
-    // addNewComment(postId,userId){
-      // let payload = {
-      //   postId: postId,
-      //   userId: userId,
-      //   commentDescription:this.comment,
-      //   commentingUserId:'user1',
-      //   parentCommentId:null
-      // }
-      // window.console.log(payload)//no empty comments
-    // },
+    addNewComment(postId,userId){
+      let that = this
+      let payload = {
+        postId: postId,
+        userId: userId,
+        commentDescription:this.comment,
+        commentingUserId:'user1',
+        parentCommentId:null
+      }
+      window.console.log(payload)
+      axios.post('http://172.16.20.133:8080/comment/user2',payload)
+      .then(function(response){
+        window.console.log(response.data)
+        that.commment = ''
+      })
+    },
     showCommentInput(event){
       event.target.nextElementSibling.classList.remove("hideInput")
     },
     goToProfile(profileId){
       window.console.log(profileId)
     },
-    addComment(postId,userId,event){
+    addComment(commentId,postId,userId,event){
       window.console.log(event)
       let payload = {
         postId: postId,
         userId: userId,
         commentDescription:event.target.value,
         commentingUserId:'user1',
-        parentCommentId:null
+        parentCommentId: commentId
       }
-      window.console.log(payload)
+      // window.console.log(payload)
+      axios.post('http://172.16.20.133:8080/comment/user2',payload)
+      .then(function(response){
+        window.console.log(response.data)
+      })
       event.target.classList.add("hideInput")
 
     },
