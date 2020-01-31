@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
   <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
-
+  
 </head>
 
 <body style="background-color: #E9EBEE;">
@@ -23,23 +23,24 @@
 </body>
 <!-- <script>
   const messaging = firebase.messaging();
-
   messaging.usePublicVapidKey("BFI5WPEYjUy4Oyyf-Ll4E9AJidFe9PC_1R91nKMRt45wXsiY8vX54i4kWPXgQ07kBPgVQNW84dR6Jh9o9IqjthU ");
   const tokenDivId = 'token_div';
   const permissionDivId = 'permission_div';
   messaging.onTokenRefresh(() => {
-    messaging.getToken().then((refreshedToken) => {
-      console.log('Token refreshed.');
+  messaging.getToken().then((refreshedToken) => {
+      window.console.log('Token refreshed.');
       setTokenSentToServer(false);
       sendTokenToServer(refreshedToken);
+      localStorage.setItem('fcmToken: ', refreshedToken);
+      window.console.log('fcmToken: ', refreshedToken)
       resetUI();
     }).catch((err) => {
-      console.log('Unable to retrieve refreshed token ', err);
+      window.console.log('Unable to retrieve refreshed token ', err);
       showToken('Unable to retrieve refreshed token ', err);
     });
   });
   messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
+    window.console.log('Message received. ', payload);
     appendMessage(payload);
   });
   function resetUI() {
@@ -50,12 +51,12 @@
         sendTokenToServer(currentToken);
         updateUIForPushEnabled(currentToken);
       } else {
-        console.log('No Instance ID token available. Request permission to generate one.');
+        window.console.log('No Instance ID token available. Request permission to generate one.');
         updateUIForPushPermissionRequired();
         setTokenSentToServer(false);
       }
     }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
+      window.console.log('An error occurred while retrieving token. ', err);
       showToken('Error retrieving Instance ID token. ', err);
       setTokenSentToServer(false);
     });
@@ -65,14 +66,17 @@
   function showToken(currentToken) {
     const tokenElement = document.querySelector('#token');
     tokenElement.textContent = currentToken;
+    localStorage.setItem("currentToken: ",currentToken)
   }
 
   function sendTokenToServer(currentToken) {
     if (!isTokenSentToServer()) {
-      console.log('Sending token to server...');
+      window.console.log('Sending token to server...');
       setTokenSentToServer(true);
+      //window.console.log(currentToken);
+      localStorage.setItem('fcmToken: ',currentToken)
     } else {
-      console.log('Token already sent to server so won\'t send it again ' +
+      window.console.log('Token already sent to server so won\'t send it again ' +
         'unless it changes');
     }
 
@@ -96,13 +100,13 @@
   }
 
   function requestPermission() {
-    console.log('Requesting permission...');
+    window.console.log('Requesting permission...');
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
-        console.log('Notification permission granted.');
+        window.console.log('Notification permission granted.');
         resetUI();
       } else {
-        console.log('Unable to get permission to notify.');
+        window.console.log('Unable to get permission to notify.');
       }
     });
   }
@@ -110,14 +114,14 @@
   function deleteToken() {
     messaging.getToken().then((currentToken) => {
       messaging.deleteToken(currentToken).then(() => {
-        console.log('Token deleted.');
+        //console.log('Token deleted.');
         setTokenSentToServer(false);
         resetUI();
       }).catch((err) => {
-        console.log('Unable to delete token. ', err);
+        window.console.log('Unable to delete token. ', err);
       });
     }).catch((err) => {
-      console.log('Error retrieving Instance ID token. ', err);
+      window.console.log('Error retrieving Instance ID token. ', err);
       showToken('Error retrieving Instance ID token. ', err);
     });
 

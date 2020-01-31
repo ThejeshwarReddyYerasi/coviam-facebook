@@ -15,44 +15,13 @@
     <v-text-field
       v-model="user.userName"
       :rules="nameRules"
-      label="Username"
+      label="Business Name: "
       required
     ></v-text-field> 
 
-     <v-text-field
-     type="email"
-      v-model="user.userEmailId"
-      :rules="emailRules"
-      label="E-mail"
-      required
-    ></v-text-field>
-
+    
     <v-text-field
-      v-model="user.userCity"
-      :rules="emailRules"
-      label="city"
-      required
-    ></v-text-field>
-      
-      <v-text-field
-      type="date"
-      v-model="user.userDateOfBirth"
-      :rules="emailRules"
-      label="Date Of Birth"
-      required
-    ></v-text-field>
-
-       <v-select
-      v-model="user.userGender"
-      :items="gender"
-      :rules="[v => !!v || 'Item is required']"
-      label="Gender"
-      required
-    >
-        </v-select>
-
-    <v-text-field
-      v-model="user.personalDescription"
+      v-model="user.Description"
       :rules="nameRules"
       label="Personal Description"
       required
@@ -71,6 +40,7 @@
 </div>
 </template>
 <script>
+
 import { storage } from '../../firebaseConfig'
 import Axios from 'axios';
 export default {
@@ -92,7 +62,7 @@ export default {
 methods: {
    submit: function(){
        this.$store.dispatch('editProfile',{
-           data: this.user,
+           data: this.data,
        }); 
        this.$router.push('/profile'); 
    },
@@ -118,7 +88,7 @@ methods: {
      this.selectedFile = event.target.files[0]
 },
 }, 
-} 
+}  
 </script>
 <style scoped> 
 .container{   
