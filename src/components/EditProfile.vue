@@ -1,7 +1,9 @@
 <template>
-<div class="container">
+<div class="container id">
+  <v-app>
     <div class="title" style="font-weight:bold">
-        Edit Profile</div>
+        Edit Profile
+    </div>
         <br> 
     <v-form
     align-content="center"
@@ -11,16 +13,7 @@
     lazy-validation
     > 
     <v-text-field
-      v-model="user.userId"
-      :counter="10"
-      :rules="nameRules"
-      label="User ID"
-      required
-    ></v-text-field>
-
-    <v-text-field
       v-model="user.userName"
-      :counter="10"
       :rules="nameRules"
       label="Username"
       required
@@ -55,29 +48,11 @@
       :rules="[v => !!v || 'Item is required']"
       label="Gender"
       required
-    >   <option>male</option>
+    >
         </v-select>
-   
-      <v-select
-        v-model="user.typeOfProfile"
-        :items="type"
-        :rules="[v => !!v || 'Item is required']"
-        label="Type Of Profile"
-        required
-      >
-      </v-select>
-
-       <v-select
-        v-model="user.domainOfProfile"
-        :items="domain"
-        :rules="[v => !!v || 'Item is required']"
-        label="Domain Of Profile"
-        required
-      ></v-select>
 
     <v-text-field
       v-model="user.personalDescription"
-      :counter="10"
       :rules="nameRules"
       label="Personal Description"
       required
@@ -92,23 +67,19 @@
       Submit
     </v-btn>
   </v-form>
+  </v-app>
 </div>
 </template>
 <script>
 export default {
         data: function () {
         return {
-            gender:['male','female','others' ],
-            type:['public','private'],
-            domain:['business','personal'],
+            gender:['male','female','other' ],
             user: {
-                userId: '',
                 userName: '',
                 userEmailId: '',
                 userCity: '',
                 userDateOfBirth: "",
-                typeOfProfile: '',
-                domainOfProfile: '',
                 userGender: '',
                 personalDescription: '',
                 profilePicture: '',

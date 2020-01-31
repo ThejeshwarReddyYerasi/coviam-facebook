@@ -15,9 +15,9 @@
         </v-col>
     </v-row>
     <v-row style="background: #ffffff;">
-      <v-col lg="5"><v-btn id="video-btn" icon color="#000000"><input type="file" accept="video/*" @change="onfileSelected" /></v-btn></v-col>
-      <v-col lg="5"><v-btn id="video-btn" icon color="#000000"><input type="file" accept="image/*" @change="onfileSelected" /></v-btn></v-col>
-      <v-col lg="2" style="text-align:right;"><v-btn id="submit-btn" @click="onUpload"> Upload</v-btn></v-col>
+      <v-col><v-btn id="video-btn" icon color="#000000"><input type="file" accept="video/*,image/png" @change="onfileSelected" /></v-btn></v-col>
+      <!-- <v-col lg="5"><v-btn id="video-btn" icon color="#000000"><input type="file" accept="image/*" @change="onfileSelected" /></v-btn></v-col> -->
+      <v-col style="text-align:right;"><v-btn id="submit-btn" @click="onUpload"> Upload</v-btn></v-col>
     </v-row>
   </v-container>
 </template>
@@ -57,7 +57,3 @@ data: function() {
 }
 }
 </script>
-
-<style>
-
-</style>

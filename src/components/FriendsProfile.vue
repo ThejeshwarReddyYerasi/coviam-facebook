@@ -82,7 +82,7 @@
       </v-col>
     </v-row>
     <v-container>
-      <v-row v-for="(items,index) in posts" :key="index">
+      <v-row>
         <v-col lg="8" class="boxColor boxMarginCenter">
           <v-row>
             <v-col lg="2">
@@ -193,8 +193,6 @@ export default {
     friendsDialog:false,
     commentInput:false,
     bottom: false,
-    pageNo:0,
-    pageSize:3,
     profileDetails:{},
     friendsList:[],
     posts:[]
@@ -205,7 +203,7 @@ export default {
       axios.get('http://10.177.68.8:8082/friends/getList/50d57520-0171-4756-a104-8fec92660959')
       .then(function(response){
         that.friendsList = response.data.data
-        // window.console.log(that.friendsList)
+        window.console.log(that.friendsList)
       })
       window.console.log("getfriendslist")
     },
@@ -233,33 +231,25 @@ export default {
       return bottomOfPage || pageHeight < visible
     },
      getPosts() {
-      let that = this
-      axios.get(`http://10.177.68.116:8080/post/getUserPost/user2/${that.pageNo}/${that.pageSize}`,{
-        headers:{
-          userId:'user2'
-        },
-      }).then(function(response){
-        that.posts.push(response.data.data)
-        window.console.log(that.posts[0])
-      })
-        // .then(response => {
-        //   let api = response.data[0];
-        //   let apiInfo = {
-        //     name: api.name,
-        //     desc: api.description,
-        //     img: api.image_url,
-        //     tips: api.brewers_tips,
-        //     tagline: api.tagline,
-        //     food: api.food_pairing
-        //   };
-        //   this.posts.push(apiInfo)
-        //   window.console.log(this.posts)
-        // })
+      // axios.get('https://api.punkapi.com/v2/beers/random')
+      //   .then(response => {
+      //     let api = response.data[0];
+      //     let apiInfo = {
+      //       name: api.name,
+      //       desc: api.description,
+      //       img: api.image_url,
+      //       tips: api.brewers_tips,
+      //       tagline: api.tagline,
+      //       food: api.food_pairing
+      //     };
+      //     this.posts.push(apiInfo)
+      //     window.console.log(this.posts)
+      //   })
     }
   },
   created(){
     let that = this
-    axios.get('http://10.177.68.8:8082/user/50d57520-0171-4756-a104-8fec92660959')
+    axios.get(`http://10.177.68.8:8082/user/${this.$route.params.id}`)
     .then(function(response){
       that.profileDetails = response.data.data;
       // window.console.log(that.profileDetails)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="#4267B2">
+    <v-toolbar color="#4267B2" v-if="show"> 
         <v-row>
           <v-col lg="1" style="text-align:right;margin-top:5px">
             <v-icon large color="#ffffff">fab fa-facebook-square</v-icon>
@@ -34,6 +34,7 @@
               <v-icon class="navbarButton" >fas fa-user-friends</v-icon>
             </v-btn>
           </v-col>
+          <v-col><v-btn icon class="navbarButton" @click="$router.push({path:'/editProfile'})"><v-icon>fas fa-user</v-icon></v-btn></v-col>
         </v-row>
     </v-toolbar>
   </div>
@@ -44,16 +45,8 @@
 export default {
   name: 'navbar',
   data: () => ({
-    items:['Alabama',
-          'Alaska',
-          'American Samoa',
-          'Arizona',
-          'Arkansas',
-          'California',
-          'Colorado',
-          'Connecticut',
-          'Delaware',
-          'District of Columbia',],
+    items:[],
+    show:true,
     select:null,
     search:null,
     loading:false,
@@ -74,18 +67,25 @@ export default {
     querySelections (v) {
       this.loading = true
       window.console.log(v)
-      this.items = this.states
-      // axios.get('https://api.coinmarketcap.com/v2/listings/')
-      // .then(function(response){
-      //   window.console.log(response)
-      // })
-      // setTimeout()
-      this.loading = false
+      
+      setTimeout(() => {
+          this.items = this.states.filter(e => {
+            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
+          })
+          this.loading = false
+        }, 500)
     },
+  },
+  created(){
+    // if(localStorage.getItem('user-token')==null){
+    //   this.show=false
+    // }
   },
   watch:{
     search (val){
-      val && val !== this.select && this.querySelections(val)
+      if(val==''){this.items=[]}else{
+        val && val !== this.select && this.querySelections(val)
+      }
     }
   }
 }

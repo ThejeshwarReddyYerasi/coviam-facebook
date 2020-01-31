@@ -5,8 +5,11 @@ import Notifications from '../components/Notifications.vue'
 import Request from '../components/Requests.vue'
 import Profile from '../components/Profile.vue'
 import EditProfile from '../components/EditProfile.vue'
+import Login from '../components/Login.vue'
 import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
+import SignUp from '../components/SignUp.vue'
+import FriendsProfile from '../components/FriendsProfile.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -35,6 +38,11 @@ const routes = [
     name: 'editProfile',
     component: EditProfile
   },
+  { 
+    path:'/login',
+    name: 'login',
+    component: Login
+  },
   {
     path: '/category',
     name: 'category',
@@ -44,6 +52,16 @@ const routes = [
     path:'/businessadvertisement',
     name:'BusinessAdvertisement',
     component: BusinessAdvertisement
+  },
+  {
+    path:'/signup',
+    name:'SignUp',
+    component: SignUp
+  },
+  {
+    path:'/profile/:id',
+    name:'friendprofile',
+    component: FriendsProfile
   }
 ]
 

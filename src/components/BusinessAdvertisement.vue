@@ -42,7 +42,7 @@ input{
     border-style: groove;
 }
 #Exception{
-    height: 12vh;
+    /* height: 12vh; */
     background-color: white;
 }
 button{
