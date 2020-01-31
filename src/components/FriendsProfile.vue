@@ -29,7 +29,7 @@
                   width="500"
                 >
                   <template v-slot:activator="{ on }">                    
-                      <v-btn text @click.stop="getFriendsList()" v-on="on" style="background-color:#4267B2;color:white"><span>Friends</span></v-btn>
+                      <v-btn text @click.stop="getFriendsList()" v-on="on" style="background-color:#4267B2;color:white"><span>Mutual Friends</span></v-btn>
                   </template>
                   <v-card max-height="700px">
                     <v-card-title
