@@ -10,6 +10,8 @@ import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
 import SignUp from '../components/SignUp.vue'
 import FriendsProfile from '../components/FriendsProfile.vue'
+import EditBusinessProfile from '../components/EditBusinessProfile.vue'
+import TypeOfProfile from '../components/TypeOfProfile.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -62,7 +64,18 @@ const routes = [
     path:'/profile/:id',
     name:'friendprofile',
     component: FriendsProfile
-  }
+  },
+  {
+    path:'/editBusinessProfile',
+    name:'editBusinessProfile',
+    component: EditBusinessProfile
+  },
+  {
+    path:'/typeofprofile',
+    name:'typeOfProfile',
+    component: TypeOfProfile
+  },
+  
 ]
 
 const router = new VueRouter({

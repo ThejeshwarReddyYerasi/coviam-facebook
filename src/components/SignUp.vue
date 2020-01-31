@@ -77,7 +77,7 @@ export default {
                 window.console.log(accountType),
                 axios.post('/backendCommonInfraLogin/controller/register',accountType)
             
-            )).then(this.$router.push('/login'))
+            )).then(this.$router.push({ name: 'login'}))
         }
     },
     created(){
