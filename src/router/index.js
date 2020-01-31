@@ -6,7 +6,7 @@ import Request from '../components/Requests.vue'
 import Profile from '../components/Profile.vue'
 import EditProfile from '../components/EditProfile.vue'
 import Login from '../components/Login.vue'
-import Category from '../components/Category.vue'
+// import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
 import SignUp from '../components/SignUp.vue'
 import FriendsProfile from '../components/FriendsProfile.vue'
@@ -42,11 +42,6 @@ const routes = [
     path:'/login',
     name: 'login',
     component: Login
-  },
-  {
-    path: '/category',
-    name: 'category',
-    component: Category
   },
   {
     path:'/businessadvertisement',
