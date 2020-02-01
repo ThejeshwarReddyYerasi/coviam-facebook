@@ -1,12 +1,15 @@
 <template>
   <div id="app">
+    <v-app>
     <navbar></navbar>
     <router-view/>
+    </v-app>
   </div>
 </template>
 
 <script>
 import navbar from './components/Navbar'
+
 export default {
   name: 'App',
   components:{
@@ -15,10 +18,6 @@ export default {
   data: () => ({
   }),
   created(){
-    // if(localStorage.getItem('user-token')==null){
-    //   this.$router.push({path:'/login'})
-
-    // }
   }
 };
 </script>

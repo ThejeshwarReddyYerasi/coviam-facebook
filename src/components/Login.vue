@@ -1,5 +1,6 @@
 <template>
   <main>
+
     <body>
       <div class="Login">
         <h3 style="margin-top:20px">Sign In</h3>
@@ -25,10 +26,16 @@
           /> 
 
           <div class="Loginbuttoncontainer">
-            <v-btn @click="submitClicked" class="button">Login</v-btn>
+            <v-btn
+              @click="submitClicked"
+              class="button("
+            >Login</v-btn>
           </div>
           <div>
-            <v-btn @click="$router.push({path:'/signup'})" class="button">Sign Up</v-btn>
+            <v-btn
+              @click="$router.push({path:'/signup'})"
+              class="button"
+            >Sign Up</v-btn>
           </div>
         </div>
       </div>
@@ -37,42 +44,50 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
- 
   name: "login",
   data: function() {
     return {
       username: "",
       password: "",
       confirmPassword: "",
-      loginType: "customer"
+      loginType: "customer",
+      accessToken: "",
     };
   },  
   methods: {
     submitClicked() {
       //let self = this
       if(this.confirmPassword==this.password){ 
+      let that = this
       let data = {
-        email: this.username,
+        emailAddress: this.username,
         password: this.password,
-      };
-      this.$store.dispatch("loginUser", {
-        data: data,
-        success: function() {  
-          this.$router.push('/home')
-        }, 
-        fail: function() {
-          window.console.log("login failed ...");
-        }
-      });
+        channel:'Facebook'
       }
-     else{ 
-      alert("passwords do not match");
-     } 
+      // window.console.log(data)
+      axios.post('/backendCommonInfraLogin/controller/login',data)
+      .then(function(response){
+        window.console.log(response.data)
+        if(response.data.statusCode == 1000){
+          if(!response.data.data.profile){
+            that.$router.push({path:'/typeOfProfile'})
+          }else if(response.data.data.profile=='Business'){
+            //route to business home
+          }else if(response.data.data.profile=='Public' || response.data.data.profile == 'Private'){
+            that.$router.push({path:'/home'})
+          }
+        }
+        localStorage.setItem('accessToken',response.data.data.accessToken)
+      })
+      } 
+      else{
+        alert("passwords do not match!")
+      }
     }
   }
-  
-};
+}
 </script>
 <style scoped>
 .Login {
@@ -93,7 +108,7 @@ export default {
   width: 90%;
   margin-bottom: 20px;
   padding: 5px;
-  outline: none
+  outline: none;
 }
 .fa {
   padding: 20px;
@@ -113,11 +128,11 @@ export default {
   margin: 5px;
 }
 
-.button{
-  background-color: #4267B2!important;
+.button {
+  background-color: #4267b2 !important;
   width: 60%;
   color: white;
-  margin: 30px
+  margin: 30px;
 }
 /* .submitbutton:hover{
     background: #0C8699;

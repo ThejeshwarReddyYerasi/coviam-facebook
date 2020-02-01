@@ -6,11 +6,14 @@ import Request from '../components/Requests.vue'
 import Profile from '../components/Profile.vue'
 import EditProfile from '../components/EditProfile.vue'
 import Login from '../components/Login.vue'
-import Category from '../components/Category.vue'
+// import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
 import SignUp from '../components/SignUp.vue'
 //import FriendsProfile from '../components/FriendsProfile.vue'
 import businessFriendsProfile from '../components/businessFriendsProfile.vue'
+import FriendsProfile from '../components/FriendsProfile.vue'
+import EditBusinessProfile from '../components/EditBusinessProfile.vue'
+import TypeOfProfile from '../components/TypeOfProfile.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -45,11 +48,6 @@ const routes = [
     component: Login
   },
   {
-    path: '/category',
-    name: 'category',
-    component: Category
-  },
-  {
     path:'/businessadvertisement',
     name:'BusinessAdvertisement',
     component: BusinessAdvertisement
@@ -63,8 +61,24 @@ const routes = [
     path:'/businessProfile/:id',
     name:'businessFriendprofile',
     component: businessFriendsProfile
-  }
+  },
+  {
 
+    path:'/profile/:id',
+    name:'friendprofile',
+    component: FriendsProfile
+  },
+  {
+    path:'/editBusinessProfile',
+    name:'editBusinessProfile',
+    component: EditBusinessProfile
+  },
+  {
+    path:'/typeofprofile',
+    name:'typeOfProfile',
+    component: TypeOfProfile
+  },
+  
 ]
 
 const router = new VueRouter({

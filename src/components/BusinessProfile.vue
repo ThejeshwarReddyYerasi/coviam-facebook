@@ -4,8 +4,7 @@
     <v-row class="boxColor">
       <v-col lg="4">
         <v-avatar size="250">
-          <v-img :src="profileDetails.profilePicure"
-          :contain="true"></v-img>
+          <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
         </v-avatar>
       </v-col>
       <v-col>
@@ -110,15 +109,8 @@
           </v-row>
           <v-divider></v-divider>
           <v-row>
-            <v-col>
-              <v-btn text style="color:blue" v-if="item.reaction">
-                <v-icon >fas fa-thumbs-up</v-icon>
-              </v-btn>
-              <v-btn v-else text @click="likePost(item.postId)" >
-                <v-icon>fas fa-thumbs-up</v-icon>
-              </v-btn>
-              <span style="margin-right:5px;margin-top:5px">Like{{item.counterOfLikes}}</span></v-col>
-            <v-col><v-btn text @click="dislike(item.postId,item.postDescription,item.postImageUrl,item.counterOfDislilkes)"><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike{{item.counterOfDislilkes}}</span></v-btn></v-col>
+            <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like{{item.counterOfLikes}}</span></v-btn></v-col>
+            <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike{{item.counterOfDislilkes}}</span></v-btn></v-col>
             <v-col>
               <div style="margin-right:5px;margin-top:7px;cursor:pointer">
                 <v-dialog 
@@ -159,10 +151,10 @@
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
-            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId)">
+            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment('new')">
           </v-row>
           <v-divider></v-divider>
-          <div v-for="(comment,i) in item.parentComments" :key="i">
+          <div>
             <v-row style="margin-top:10px" class="boxTextLeft">
               <v-col lg="1">
                 <v-avatar style="margin-left:10px" size="40">
@@ -170,16 +162,18 @@
                 </v-avatar>
               </v-col>
               <v-col lg="11" style="padding-left:15px">
-                <v-row>{{comment.commentDescription}}</v-row>
+                <v-row>comment comment</v-row>
                 <v-row>
                   <a @click="showCommentInput($event)">Reply</a>
-                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event)" placeholder="Reply">
+                <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment('123','34',$event)" placeholder="Reply">
                 </v-row>
               </v-col>
             </v-row>
-            <v-row v-for="(subComments,j) in comment.subComments" :key="j">
-              <v-col style="text-align:right"> 
-                {{subComments.commentDescription}}
+            <v-row>
+              <v-col style="text-align:right">
+                comment comment comment
+                  <a @click="showCommentInput($event)">Reply</a>
+                <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="replyComment('sub')" placeholder="Reply">
                 <v-avatar>
                   <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
                 </v-avatar>
@@ -204,7 +198,7 @@ export default {
     commentInput:false,
     bottom: false,
     pageNo:0,
-    pageSize:2,
+    pageSize:1,
     comment:'',
     subComment:'',
     profileDetails:{},
@@ -214,11 +208,7 @@ export default {
   methods:{
     getFriendsList(){
       let that = this
-      axios.get('/backend/friends/getList/',{
-        headers:{
-          token:localStorage.getItem('accessToken')
-        }
-      })
+      axios.get('http://10.177.68.8:8082/friends/getList/50d57520-0171-4756-a104-8fec92660959')
       .then(function(response){
         that.friendsList = response.data.data
         // window.console.log(that.friendsList)
@@ -228,83 +218,32 @@ export default {
     getReactionsOnPost(){
       window.console.log("getReactionsOnPost")
     },
-    addNewComment(postId,userId){
-      // let that = this
-      let payload = {
-        postId: postId,
-        userId: userId,
-        commentDescription:this.comment,
-        commentingUserId:'',
-        parentCommentId:null
-      }
-      window.console.log(payload)
-      axios({
-        url:'/backend/comment/',
-        method:'post',
-        headers:{
-          token:localStorage.getItem('accessToken')
-        },
-        data:payload
-      })
-    },
+    // addNewComment(postId,userId){
+      // let payload = {
+      //   postId: postId,
+      //   userId: userId,
+      //   commentDescription:this.comment,
+      //   commentingUserId:'user1',
+      //   parentCommentId:null
+      // }
+      // window.console.log(payload)//no empty comments
+    // },
     showCommentInput(event){
       event.target.nextElementSibling.classList.remove("hideInput")
-    },
-    likePost(postId){
-      axios({
-        url:'/backend/reaction/',
-        method:'post',
-        headers:{token:localStorage.getItem('accessToken')},
-        data:{
-          reactionType:'like',
-          postId: postId
-        }
-      })
-    },
-    dislike(postId,postDescription,postImageUrl,counterOfDislilkes){
-      let payload = {
-        postId:postId,
-        postDescription:postDescription,
-        postImageUrl:postImageUrl,
-        postVideoUrl:null,
-        counterOfDislilkes:counterOfDislilkes+1,
-        userId:1234,
-        source:'facebook',
-      }
-      window.console.log(payload)
-      axios({
-        url:'http://172.16.20.161:8090/supportAgent/createTicket',
-        method:'POST',
-        headers:{
-          token:localStorage.getItem('accessToken')
-        },
-        data:payload
-      })
     },
     goToProfile(profileId){
       window.console.log(profileId)
     },
-    addComment(commentId,postId,userId,event){
+    addComment(postId,userId,event){
       window.console.log(event)
       let payload = {
         postId: postId,
         userId: userId,
         commentDescription:event.target.value,
-        commentingUserId:'',
-        parentCommentId: commentId
+        commentingUserId:'user1',
+        parentCommentId:null
       }
       window.console.log(payload)
-      axios({
-        url:'/backend/comment/',
-        method:'post',
-        headers:{
-          token:localStorage.getItem('accessToken')
-        },
-        data:payload
-      })
-      .then(function(response){
-        window.console.log(response.data)
-      })
       event.target.classList.add("hideInput")
 
     },
@@ -317,16 +256,13 @@ export default {
     },
      getPosts() {
       let that = this
-      axios.get(`/backend/post/getUserPost/${that.pageNo}/${that.pageSize}`,{
-        headers:{token:localStorage.getItem('accessToken')}
-      })
+      axios.get(`http://172.16.20.133:8080/post/getUserPost/user2/${that.pageNo}/${that.pageSize}`)
       .then(function(response){
-        window.console.log(response.data)
         response.data.data.forEach(element => {
           that.posts.push(element)
         });
         that.pageNo++;
-        // window.console.log(that.posts)
+        window.console.log(that.posts)
       })
         // .then(response => {
         //   let api = response.data[0];
@@ -345,16 +281,10 @@ export default {
   },
   created(){
     let that = this
-    axios({
-      url:'/backend/user/getUserInfo',
-      method:'get',
-      headers:{
-        token:localStorage.getItem('accessToken')
-      }
-    })
+    axios.get('http://10.177.68.8:8082/user/50d57520-0171-4756-a104-8fec92660959')
     .then(function(response){
       that.profileDetails = response.data.data;
-      window.console.log(that.profileDetails)
+      // window.console.log(that.profileDetails)
     })
     .catch(function(response){
       window.console.log(response)
@@ -398,8 +328,5 @@ export default {
 }
 .showInput{
   display:block
-}
-.like{
-  color:blue
 }
 </style>

@@ -11,13 +11,13 @@
                 <input v-model="userName" type="text" name="userName" placeholder="UserName" class="input"><br><br>
                 <input v-model="userEmail" type="email" name="email" placeholder="E-Mail" class="input"><br><br>
                 <input v-model="password" type="password" name="password" placeholder="password" class="input"><br><br>
-                <div class="type">
+                <!-- <div class="type">
                 <v-radio-group v-model="accountType">
                     <span style="margin-left:-40px">TYPE OF PROFILE:</span>
                     <v-radio label="Public" value="public"></v-radio>
                         <v-radio label="Private" value="private"></v-radio>
                 </v-radio-group>
-              </div>
+              </div> -->
                 <!-- <input type="number" name="phoneNumber" placeholder="Phone-Number" class="input"><br><br> -->
                 <v-btn color="#4267B2" style="color:white;width:60%;margin-bottom:20px" @click="signup()">Signup</v-btn>
                 <!-- <v-btn color="#4267B2" style="color:white;width:60%;margin-top:30px;margin-bottom:30px">Login</v-btn> -->
@@ -57,6 +57,7 @@ export default {
     },
     methods: {
         signup(){
+            let that = this
             let payload = {
                 name:this.userName,
                 emailAddress:this.userEmail,
@@ -67,17 +68,8 @@ export default {
             axios.post('/backendCommonInfraLogin/controller/register',payload)
             .then(function(response){
                 window.console.log(response)
-                var accountType = {
-                    userid: response.data.data.userId,
-                    channel: "facebook",
-                    profile: this.accountType
-                }
-                return accountType;
-            }).response(accountType => (
-                window.console.log(accountType),
-                axios.post('/backendCommonInfraLogin/controller/register',accountType)
-            
-            )).then(this.$router.push('/login'))
+                that.$router.push({path:'/login'})
+            })
         }
     },
     created(){
