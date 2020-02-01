@@ -23,3 +23,4 @@ const firebaseConfig = {
     imageStore,
     videoStore,
   }
+  

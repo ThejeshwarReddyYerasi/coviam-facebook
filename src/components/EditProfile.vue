@@ -9,27 +9,24 @@
     align-content="center"
     ref="form"
     max-width="100"
-    v-model="valid"
     lazy-validation
     > 
     <v-text-field
-      v-model="user.userName"
-      :rules="nameRules"
-      label="Username"
+      v-model="user.userFirstName"
+      label="user name"
       required
     ></v-text-field> 
 
      <v-text-field
      type="email"
       v-model="user.userEmailId"
-      :rules="emailRules"
       label="E-mail"
       required
+      :disabled="true"
     ></v-text-field>
 
     <v-text-field
       v-model="user.userCity"
-      :rules="emailRules"
       label="city"
       required
     ></v-text-field>
@@ -37,7 +34,6 @@
       <v-text-field
       type="date"
       v-model="user.userDateOfBirth"
-      :rules="emailRules"
       label="Date Of Birth"
       required
     ></v-text-field>
@@ -45,7 +41,6 @@
        <v-select
       v-model="user.userGender"
       :items="gender"
-      :rules="[v => !!v || 'Item is required']"
       label="Gender"
       required
     >
@@ -53,15 +48,13 @@
 
     <v-text-field
       v-model="user.personalDescription"
-      :rules="nameRules"
       label="Personal Description"
       required
     ></v-text-field>
-
-    <v-file-input accept="image/*" prepend-icon="mdi-camera" label="Upload Profile Picture" v-model="user.profilePicture" @change="onfileSelected"></v-file-input>
+    <input type="file" accept="video/*,image/png" @change="onfileSelected" />
+    <!-- <v-file-input accept="image/*" prepend-icon="mdi-camera" label="Upload Profile Picture" @change="onfileSelected()"></v-file-input> -->
     
     <v-btn
-      :disabled="!valid"
       @click="onUpload"
     > 
       Submit
@@ -77,20 +70,23 @@ export default {
         data: function () {
         return {
             gender:['male','female','other' ],
-            user: {
-                userName: '',
-                userEmailId: '',
-                userCity: '',
-                userDateOfBirth: "",
-                userGender: '',
-                personalDescription: '',
-                profilePicture: '',
-            },
-            successMessage:""
+            user:{},
+            successMessage:"",
+            selectedFile:null
         }
     },          
 methods: {
+<<<<<<< HEAD
+=======
+   submit: function(){
+       this.$store.dispatch('editProfile',{
+           data: this.user,
+       }); 
+       this.$router.push('/profile'); 
+   },
+>>>>>>> Theja
    onUpload() {
+     let that = this
     this.picture=null;
       const storageRef=storage.ref(`${this.selectedFile.name}`).put(this.selectedFile);
       storageRef.on(`state_changed`,snapshot=>{
@@ -99,10 +95,15 @@ methods: {
       ()=>{this.uploadValue=100;
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
           this.picture =url;
-          window.console.log(this.picture);
-        }).then(
-          Axios.post('')
-        )
+          that.user.profilePicure = url
+          window.console.log(that.user);
+          Axios({
+            url:'/backend/user',
+            method:'post',
+            headers:{token:localStorage.getItem('accessToken')},
+            data:that.user
+          })
+        })
       }
       );
   },
@@ -111,7 +112,18 @@ methods: {
       this.picture=null;
      this.selectedFile = event.target.files[0]
 },
-}, 
+},
+created() {
+  let that = this
+  Axios.get('/backend/user/getUserInfo',{
+    headers:{token:localStorage.getItem('accessToken')}
+  })
+  .then(function(response){
+    that.user = response.data.data
+    window.console.log(response.data.data)
+  })
+
+} 
 } 
 </script>
 <style scoped> 
