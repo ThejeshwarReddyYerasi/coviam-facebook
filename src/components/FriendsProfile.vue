@@ -4,7 +4,8 @@
     <v-row class="boxColor">
       <v-col lg="4">
         <v-avatar size="250">
-          <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+          <v-img :src="profileDetails.profilePicure"
+          :contain="true"></v-img>
         </v-avatar>
       </v-col>
       <v-col>
@@ -17,11 +18,11 @@
             <v-row>{{profileDetails.userGender}}</v-row>
             <v-row>{{profileDetails.userDateOfBirth}}</v-row>
             <v-row>{{profileDetails.userCity}}</v-row>
-         </v-col> 
+         </v-col>
          <v-col>
             <v-row>{{profileDetails.domainOfProfile}}</v-row>
             <v-row>{{profileDetails.typeOfProfile}}</v-row>
-            <v-row style="margin-top:10px">
+            <v-row style="margin-top:10px" v-if="computeMutualFriends">
               <template>
               <div class="text-center">
                 <v-dialog 
@@ -36,7 +37,7 @@
                       class="headline grey lighten-2"
                       primary-title
                     >
-                      Friends List
+                      Mutual Friends
                     </v-card-title>
 
                     <v-card-text v-for="(item,index) in friendsList" :key="index" style="margin:0;padding:0">
@@ -77,12 +78,14 @@
             </template>
 
             </v-row>
+            <!-- <v-row v-if="isFriend"><v-btn text style="background-color:#4267B2;color:white;margin-top:30px">Added</v-btn></v-row> -->
+            <v-row v-if="computeAddFriend"><v-btn text style="background-color:#4267B2;color:white;margin-top:30px">Add Friend</v-btn></v-row>
          </v-col>
        </v-row>
       </v-col>
     </v-row>
     <v-container>
-      <v-row>
+      <v-row v-for="(item,index) in posts" :key="index">
         <v-col lg="8" class="boxColor boxMarginCenter">
           <v-row>
             <v-col lg="2">
@@ -92,14 +95,14 @@
             </v-col>
             <v-col lg="10">
               <v-row>Name</v-row>
-              <v-row>Time</v-row>
+              <v-row>{{item.postDate}}</v-row>
             </v-col>
           </v-row>
           <v-row>
-            <v-container class="boxTextLeft">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution</v-container>
+            <v-container class="boxTextLeft">{{item.postDescription}}</v-container>
           </v-row>
           <v-row>
-            <v-img class="boxMarginCenter" max-height="300" max-width="700" src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" :contain="true">
+            <v-img class="boxMarginCenter" max-height="300" max-width="700" :src="item.postImageUrl" :contain="true">
             </v-img>
           </v-row>
           <v-row style="margin-top:5px">
@@ -109,8 +112,15 @@
           </v-row>
           <v-divider></v-divider>
           <v-row>
-            <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like</span></v-btn></v-col>
-            <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike</span></v-btn></v-col>
+            <v-col>
+              <v-btn text style="color:blue" v-if="item.reaction">
+                <v-icon >fas fa-thumbs-up</v-icon>
+              </v-btn>
+              <v-btn v-else text @click="likePost(item.postId)" >
+                <v-icon>fas fa-thumbs-up</v-icon>
+              </v-btn>
+              <span style="margin-right:5px;margin-top:5px">Like{{item.counterOfLikes}}</span></v-col>
+            <v-col><v-btn text @click="dislike(item.postId,item.postDescription,item.postImageUrl,item.counterOfDislilkes)"><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike{{item.counterOfDislilkes}}</span></v-btn></v-col>
             <v-col>
               <div style="margin-right:5px;margin-top:7px;cursor:pointer">
                 <v-dialog 
@@ -118,7 +128,7 @@
                   width="500"
                 >
                   <template v-slot:activator="{ on }">                    
-                  <a @click.stop="getReactionsOnPost()" v-on="on">13 other reactions</a>
+                  <a @click.stop="getReactionsOnPost()" v-on="on">{{item.counterOfEmojis}} other reactions</a>
                   </template>
                   <v-card height="700">
                     <v-card-title
@@ -147,14 +157,14 @@
                 </v-dialog>
               </div>
             </v-col>
-            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>14 comments</a></div></v-col>
+            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{item.counterOfComments}} comments</a></div></v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
-            <input type="text" id="comment" placeholder="Comment" @keydown.enter="addNewComment()">
+            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId)">
           </v-row>
           <v-divider></v-divider>
-          <div>
+          <div v-for="(comment,i) in item.parentComments" :key="i">
             <v-row style="margin-top:10px" class="boxTextLeft">
               <v-col lg="1">
                 <v-avatar style="margin-left:10px" size="40">
@@ -162,14 +172,16 @@
                 </v-avatar>
               </v-col>
               <v-col lg="11" style="padding-left:15px">
-                <v-row>comment comment</v-row>
-                <v-row><a @click="showCommentInput()">Reply</a></v-row>
-                <input type="text" id="comment" v-if="commentInput" @keydown.enter="addComment()" placeholder="Reply">
+                <v-row>{{comment.commentDescription}}</v-row>
+                <v-row>
+                  <a @click="showCommentInput($event)">Reply</a>
+                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event)" placeholder="Reply">
+                </v-row>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row v-for="(subComments,j) in comment.subComments" :key="j">
               <v-col style="text-align:right">
-                comment comment comment
+                {{subComments.commentDescription}}
                 <v-avatar>
                   <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
                 </v-avatar>
@@ -193,35 +205,114 @@ export default {
     friendsDialog:false,
     commentInput:false,
     bottom: false,
+    pageNo:0,
+    pageSize:1,
+    comment:'',
+    subComment:'',
     profileDetails:{},
     friendsList:[],
-    posts:[]
+    posts:[],
+    isFriend:'',
+    conditionOne:'',
+    computeMutualFriends:false,
+    computeAddFriend:false
   }),
   methods:{
     getFriendsList(){
       let that = this
-      axios.get('http://10.177.68.8:8082/friends/getList/50d57520-0171-4756-a104-8fec92660959')
+      axios.get('/backend/friends/getList/',{
+        headers:{
+          token:localStorage.getItem('accessToken')
+        }
+      })
       .then(function(response){
         that.friendsList = response.data.data
-        window.console.log(that.friendsList)
+        // window.console.log(that.friendsList)
       })
       window.console.log("getfriendslist")
     },
     getReactionsOnPost(){
       window.console.log("getReactionsOnPost")
     },
-    addNewComment(){
-      window.console.log("addNewComment")//no empty comments
+    addNewComment(postId,userId){
+      // let that = this
+      let payload = {
+        postId: postId,
+        userId: userId,
+        commentDescription:this.comment,
+        commentingUserId:'',
+        parentCommentId:null
+      }
+      window.console.log(payload)
+      axios({
+        url:`/backend/comment/`,
+        method:'post',
+        headers:{
+          token:localStorage.getItem('accessToken')
+        },
+        data:payload
+      })
     },
-    showCommentInput(){
-      this.commentInput = true;
+    showCommentInput(event){
+      event.target.nextElementSibling.classList.remove("hideInput")
+    },
+    likePost(postId){
+      axios({
+        url:'/backend/reaction/',
+        method:'post',
+        headers:{token:localStorage.getItem('accessToken')},
+        data:{
+          reactionType:'like',
+          postId: postId
+        }
+      })
+    },
+    dislike(postId,postDescription,postImageUrl,counterOfDislilkes){
+      let payload = {
+        postId:postId,
+        postDescription:postDescription,
+        postImageUrl:postImageUrl,
+        postVideoUrl:null,
+        counterOfDislilkes:counterOfDislilkes+1,
+        userId:1234,
+        source:'facebook',
+      }
+      window.console.log(payload)
+      axios({
+        url:'http://172.16.20.161:8090/supportAgent/createTicket',
+        method:'POST',
+        headers:{
+          token:localStorage.getItem('accessToken')
+        },
+        data:payload
+      })
     },
     goToProfile(profileId){
       window.console.log(profileId)
     },
-    addComment(){
-      window.console.log("addComment");
-      this.commentInput = false;
+    addComment(commentId,postId,userId,event){
+      window.console.log(event)
+      let payload = {
+        postId: postId,
+        userId: userId,
+        commentDescription:event.target.value,
+        commentingUserId:'',
+        parentCommentId: commentId
+      }
+      window.console.log(payload)
+      axios({
+        url:'/backend/comment/',
+        method:'post',
+        headers:{
+          token:localStorage.getItem('accessToken')
+        },
+        data:payload
+      })
+      .then(function(response){
+        window.console.log(response.data)
+      })
+      event.target.classList.add("hideInput")
+
     },
      bottomVisible() {
       const scrollY = window.scrollY
@@ -231,36 +322,60 @@ export default {
       return bottomOfPage || pageHeight < visible
     },
      getPosts() {
-      // axios.get('https://api.punkapi.com/v2/beers/random')
-      //   .then(response => {
-      //     let api = response.data[0];
-      //     let apiInfo = {
-      //       name: api.name,
-      //       desc: api.description,
-      //       img: api.image_url,
-      //       tips: api.brewers_tips,
-      //       tagline: api.tagline,
-      //       food: api.food_pairing
-      //     };
-      //     this.posts.push(apiInfo)
-      //     window.console.log(this.posts)
-      //   })
+      let that = this
+      axios.get(`/backend/post/getUsersFriendPost/${this.$route.query.id}/${that.pageNo}/${that.pageSize}`,{
+        headers:{token:localStorage.getItem('accessToken')}
+      })
+      .then(function(response){
+        // window.console.log(response.data)
+        response.data.data.forEach(element => {
+          that.posts.push(element)
+        });
+        that.pageNo++;
+      })
     }
   },
   created(){
+    
     let that = this
-    axios.get(`http://10.177.68.8:8082/user/${this.$route.params.id}`)
+    axios({
+      url:'http://172.16.20.126:8082/user/getUserInfo',
+      method:'get',
+      headers:{
+        userId: this.$route.query.id
+      }
+    })
     .then(function(response){
       that.profileDetails = response.data.data;
-      // window.console.log(that.profileDetails)
+       if(that.profileDetails.typeOfProfile=='Public'){
+         that.conditionOne = true
+         window.console.log("one"+that.conditionOne)
+       }
+          axios({
+          url:`/backend/friends/checkfriendship/${that.$route.query.id}`,
+          method:'get',
+          headers:{
+            token:localStorage.getItem('accessToken')
+          }
+        }).then(function(response){
+          // window.console.log("is friend")
+          if(response.data.data){
+            that.computeMutualFriends = true
+          }else{that.computeAddFriend = true}
+          window.console.log("two"+response.data.data)
+          if(response.data.data || that.conditionOne){
+              window.addEventListener('scroll', () => {
+                that.bottom = that.bottomVisible()
+              })
+              that.getPosts()
+          }
+        }).catch(function(response){
+          window.console.log(response)
+        })
     })
     .catch(function(response){
       window.console.log(response)
     })
-    window.addEventListener('scroll', () => {
-      this.bottom = this.bottomVisible()
-    })
-    this.getPosts()
   },
   watch: {
     bottom(bottom) {
@@ -281,7 +396,7 @@ export default {
 .boxTextLeft{
   text-align: left!important
 }
-#comment{
+.comment{
   width:80%;
   height: 40px;
   background-color: #F2F3F5;
@@ -290,5 +405,14 @@ export default {
   margin-top: 10px;
   border-radius: 50px;
   outline: none
+}
+.hideInput{
+  display: none
+}
+.showInput{
+  display:block
+}
+.like{
+  color:blue
 }
 </style>

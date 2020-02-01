@@ -56,7 +56,7 @@ const routes = [
     component: SignUp
   },
   {
-    path:'/profile/:id',
+    path:'/viewprofile',
     name:'friendprofile',
     component: FriendsProfile
   },

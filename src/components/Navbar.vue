@@ -48,6 +48,7 @@ export default {
   name: 'navbar',
   data: () => ({
     items:[],
+    default:[],
     show:true,
     select:null,
     search:null,
@@ -70,13 +71,18 @@ export default {
       let that = this
       this.loading = true
       window.console.log(v);
-      axios.get("http://172.16.20.202:7007/facebooksearch/search/"+v)
+      axios.get(`/backend/facebooksearch/search/${v}`,{
+        headers:{token:localStorage.getItem('accessToken')}
+      })
       .then(function(response){
-        that.items = []
+        that.items = [],
+        that.default = []
         response.data.forEach(element => {
-          that.items.push(element.userFirstName)
+          that.items.push(element.userFirstName),
+          that.default.push(element)
         });
         window.console.log(that.items)
+        window.console.log(that.default)
         that.loading = false
       }); 
 
@@ -99,8 +105,16 @@ export default {
         val && val !== this.select && this.querySelections(val)
       }
     },
-    select() {
-      this.$router.push('/profile')
+    select(value) {
+      window.console.log(value)
+      let selected = null
+      this.default.forEach(element =>{
+        if(element.userFirstName == value){
+          selected = element.userId;
+        }
+      })
+      window.console.log(selected)
+      this.$router.push({path:'/viewprofile',query:{id:selected}})
     }
   }
 }

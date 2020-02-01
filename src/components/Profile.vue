@@ -321,26 +321,13 @@ export default {
         headers:{token:localStorage.getItem('accessToken')}
       })
       .then(function(response){
-        window.console.log(response.data)
+        // window.console.log(response.data)
         response.data.data.forEach(element => {
           that.posts.push(element)
         });
         that.pageNo++;
         // window.console.log(that.posts)
       })
-        // .then(response => {
-        //   let api = response.data[0];
-        //   let apiInfo = {
-        //     name: api.name,
-        //     desc: api.description,
-        //     img: api.image_url,
-        //     tips: api.brewers_tips,
-        //     tagline: api.tagline,
-        //     food: api.food_pairing
-        //   };
-        //   this.posts.push(apiInfo)
-        //   window.console.log(this.posts)
-        // })
     }
   },
   created(){
