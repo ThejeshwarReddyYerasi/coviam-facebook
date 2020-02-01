@@ -17,6 +17,13 @@
             type="Password"
             placeholder="Password"
           /> 
+          <input
+            v-model="confirmPassword"
+            class="password input"
+            type="Password"
+            placeholder="Confirm Password"
+          /> 
+
           <div class="Loginbuttoncontainer">
             <v-btn @click="submitClicked" class="button">Login</v-btn>
           </div>
@@ -37,12 +44,14 @@ export default {
     return {
       username: "",
       password: "",
+      confirmPassword: "",
       loginType: "customer"
     };
   },  
   methods: {
     submitClicked() {
       //let self = this
+      if(this.confirmPassword==this.password){ 
       let data = {
         email: this.username,
         password: this.password,
@@ -56,8 +65,13 @@ export default {
           window.console.log("login failed ...");
         }
       });
+      }
+     else{ 
+      alert("passwords do not match");
+     } 
     }
   }
+  
 };
 </script>
 <style scoped>

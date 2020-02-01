@@ -9,7 +9,7 @@ import Login from '../components/Login.vue'
 import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
 import SignUp from '../components/SignUp.vue'
-import FriendsProfile from '../components/FriendsProfile.vue'
+//import FriendsProfile from '../components/FriendsProfile.vue'
 import businessFriendsProfile from '../components/businessFriendsProfile.vue'
 Vue.use(VueRouter)
 

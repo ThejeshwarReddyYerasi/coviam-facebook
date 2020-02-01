@@ -54,14 +54,14 @@
     <v-text-field
       v-model="user.personalDescription"
       :rules="nameRules"
-      label="Personal Description"
+      label="Personal Description" 
       required
     ></v-text-field>
 
     <v-file-input accept="image/*" prepend-icon="mdi-camera" label="Upload Profile Picture" v-model="user.profilePicture"></v-file-input>
     
     <v-btn
-      :disabled="!valid"
+      :disabled="!valid"    
       @click="submit"
     > 
       Submit
