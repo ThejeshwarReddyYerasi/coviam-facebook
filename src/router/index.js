@@ -12,6 +12,7 @@ import SignUp from '../components/SignUp.vue'
 import FriendsProfile from '../components/FriendsProfile.vue'
 import EditBusinessProfile from '../components/EditBusinessProfile.vue'
 import TypeOfProfile from '../components/TypeOfProfile.vue'
+import BusinessProfile from '../components/BusinessProfile.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -44,6 +45,11 @@ const routes = [
     path:'/login',
     name: 'login',
     component: Login
+  },
+  { 
+    path:'/businessprofile',
+    name: 'businessprofile',
+    component: BusinessProfile
   },
   {
     path: '/category',

@@ -137,7 +137,4 @@ button{
     
     align-content: center;
 }
-.parent{
-    
-}
 </style>

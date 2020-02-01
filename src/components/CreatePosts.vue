@@ -42,7 +42,6 @@ methods: {
       }
       );
 
-
   },
   onfileSelected(event) {
       this.uploadValue=0;

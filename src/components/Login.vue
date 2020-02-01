@@ -59,7 +59,7 @@ export default {
       axios.post('/backendCommonInfraLogin/controller/login',data)
       .then(function(response){
                 window.console.log(response.data.data)
-                localStorage.setItem('accessToken',response.data.data)
+                localStorage.setItem('accessToken',response.data.data.accessToken)
       })
     }
   }

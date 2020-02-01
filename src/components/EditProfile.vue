@@ -90,12 +90,6 @@ export default {
         }
     },          
 methods: {
-   submit: function(){
-       this.$store.dispatch('editProfile',{
-           data: this.data,
-       }); 
-       this.$router.push('/profile'); 
-   },
    onUpload() {
     this.picture=null;
       const storageRef=storage.ref(`${this.selectedFile.name}`).put(this.selectedFile);
