@@ -11,6 +11,7 @@
           <v-text-field
             placeholder="Write Something Here"
             outlined style="color:#97949b;"
+            v-model="postText"
           ></v-text-field>
         </v-col>
     </v-row>
@@ -25,11 +26,12 @@
 
 <script>
 import { storage } from '../../firebaseConfig'
+import axios from 'axios';
 export default {
 name: 'CreatePosts',
 methods: {
   onUpload() {
-    this.picture=null;
+    this.picture = null
       const storageRef=storage.ref(`${this.selectedFile.name}`).put(this.selectedFile);
       storageRef.on(`state_changed`,snapshot=>{
         this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
@@ -38,21 +40,36 @@ methods: {
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
           this.picture =url;
           window.console.log(this.picture);
+          this.submit()
         });
       }
-      );
-
-
+      )
   },
   onfileSelected(event) {
       this.uploadValue=0;
       this.picture=null;
      this.selectedFile = event.target.files[0]
 },
+  submit(){
+    let payload = {
+          postDescription:this.postText,
+          postImageUrl:this.picture
+        }
+        axios({
+          url:'/backend/post/create',
+          method:'post',
+          headers:{
+            token:localStorage.getItem('accessToken')
+          },
+          data:payload
+        })
+  }
 },
 data: function() {
   return{
-    selectedFile: null
+    selectedFile: null,
+    picture:'',
+    postText:''
   }
 }
 }

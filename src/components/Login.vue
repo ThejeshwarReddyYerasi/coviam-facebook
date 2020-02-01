@@ -50,16 +50,26 @@ export default {
   },  
   methods: {
     submitClicked() {
-      //let self = this
+      let that = this
       let data = {
         emailAddress: this.username,
         password: this.password,
+        channel:'Facebook'
       }
-      window.console.log(data)
+      // window.console.log(data)
       axios.post('/backendCommonInfraLogin/controller/login',data)
       .then(function(response){
-                window.console.log(response.data.data)
-                localStorage.setItem('accessToken',response.data.data)
+        window.console.log(response.data)
+        if(response.data.statusCode == 1000){
+          if(!response.data.data.profile){
+            that.$router.push({path:'/typeOfProfile'})
+          }else if(response.data.data.profile=='Business'){
+            //route to business home
+          }else if(response.data.data.profile=='Public' || response.data.data.profile == 'Private'){
+            that.$router.push({path:'/home'})
+          }
+        }
+        localStorage.setItem('accessToken',response.data.data.accessToken)
       })
     }
   }

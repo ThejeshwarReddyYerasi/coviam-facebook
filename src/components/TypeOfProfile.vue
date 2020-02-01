@@ -48,7 +48,17 @@ import axios from 'axios'
           }
         })
         .then(function(response){
+          let dat = {
+            typeOfProfile: response.data.data.profile
+          }
+          window.console.log(dat)
           window.console.log(response.data)
+          axios({
+            url:'/backend/user/isExisting',
+            method:'post',
+            headers:{token:localStorage.getItem('accessToken')},
+            data:dat
+          })
         })
       }
     }
