@@ -9,7 +9,7 @@
       </v-col>
       <v-col>
        <v-row>
-         <v-col>
+         <v-col> 
             <v-row><v-icon style="padding-right:5px">fas fa-globe-americas</v-icon><b>Intro</b></v-row>
             <v-row>{{profileDetails.personalDescription}}</v-row>
             <v-row>{{profileDetails.userFirstName}} {{profileDetails.userLastName}}</v-row>
@@ -29,15 +29,16 @@
                   width="500"
                 >
                   <template v-slot:activator="{ on }">                    
-                      <v-btn text @click.stop="getFriendsList()" v-on="on" style="background-color:#4267B2;color:white"><span>Mutual Friends</span></v-btn>
-                       <v-btn text @click.stop="sendFriendsRequest()" style="background-color:#4267B2;color:white"><span>Send Friend Request</span></v-btn><br> <br> 
+                      <v-btn text @click.stop="getFriendsList()" v-on="on" style="background-color:#4267B2;color:white;padding:15px"><span>Mutual Friends</span></v-btn>
+                      <v-btn text @click.stop="sendFriendsRequest()" style="background-color:#4267B2;color:white"><span>Send Friend Request</span></v-btn><br> <br> 
+                      <v-btn text @click.stop="becomeModerator()" style="background-color:#4267B2;color:white"><span>Become a Moderator</span></v-btn><br> <br> 
                   </template>
-                  <v-card max-height="700px">
+                  <v-card max-height="700px"> 
                     <v-card-title
-                      class="headline grey lighten-2"
+                      class="headline grey lighten-2" 
                       primary-title
                     >
-                      Friends Lis
+                      Friends List
                     </v-card-title>
 
                     <v-card-text v-for="(item,index) in friendsList" :key="index" style="margin:0;padding:0">
@@ -112,6 +113,7 @@
           <v-row>
             <v-col><v-btn text><v-icon>fas fa-thumbs-up</v-icon><span style="margin-right:5px;margin-top:5px">Like</span></v-btn></v-col>
             <v-col><v-btn text><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike</span></v-btn></v-col>
+            
             <v-col>
               <div style="margin-right:5px;margin-top:7px;cursor:pointer">
                 <v-dialog 

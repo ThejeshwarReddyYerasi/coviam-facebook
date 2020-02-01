@@ -10,6 +10,7 @@ import Category from '../components/Category.vue'
 import BusinessAdvertisement from '../components/BusinessAdvertisement.vue'
 import SignUp from '../components/SignUp.vue'
 import FriendsProfile from '../components/FriendsProfile.vue'
+import businessFriendsProfile from '../components/businessFriendsProfile.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -59,10 +60,11 @@ const routes = [
     component: SignUp
   },
   {
-    path:'/profile/:id',
-    name:'friendprofile',
-    component: FriendsProfile
+    path:'/businessProfile/:id',
+    name:'businessFriendprofile',
+    component: businessFriendsProfile
   }
+
 ]
 
 const router = new VueRouter({
