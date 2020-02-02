@@ -4,10 +4,10 @@
       <v-col lg="12" style="background:#f5f6f7;text-align:left"> What's On Your Mind Today !! </v-col>
     </v-row>
     <v-row style="background: #ffffff;">
-      <v-col lg="1" >
-        <v-avatar><v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img> </v-avatar>
-      </v-col>
-      <v-col lg="11">
+      <!-- <v-col lg="1" > -->
+        <!-- <v-avatar><v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img> </v-avatar> -->
+      <!-- </v-col> -->
+      <v-col lg="12">
           <v-text-field
             placeholder="Write Something Here"
             outlined style="color:#97949b;"

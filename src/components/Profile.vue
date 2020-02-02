@@ -88,11 +88,11 @@
           <v-row>
             <v-col lg="2">
               <v-avatar>
-                <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                <v-img :src="profileDetails.profilePicure" :contain="true"></v-img>
               </v-avatar>
             </v-col>
             <v-col lg="10">
-              <v-row>Name</v-row>
+              <v-row>{{profileDetails.userFirstName}}</v-row>
               <v-row>{{item.postDate}}</v-row>
             </v-col>
           </v-row>
@@ -166,10 +166,11 @@
             <v-row style="margin-top:10px" class="boxTextLeft">
               <v-col lg="1">
                 <v-avatar style="margin-left:10px" size="40">
-                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                  <v-img :src="comment.profilePicture" :contain="true"></v-img>
                 </v-avatar>
               </v-col>
               <v-col lg="11" style="padding-left:15px">
+                <v-row>{{comment.commentingUserName}}</v-row>
                 <v-row>{{comment.commentDescription}}</v-row>
                 <v-row>
                   <a @click="showCommentInput($event)">Reply</a>
@@ -177,14 +178,20 @@
                 </v-row>
               </v-col>
             </v-row>
-            <v-row v-for="(subComments,j) in comment.subComments" :key="j">
-              <v-col style="text-align:right">
-                {{subComments.commentDescription}}
-                <v-avatar>
-                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-                </v-avatar>
-              </v-col>
-            </v-row>
+            <!-- <div style="text-align:right" > -->
+              <v-row v-for="(subComments,j) in comment.subComments" :key="j" class="boxTextRight">
+                <v-col lg="11">
+                  <p style="margin:0">{{subComments.commentingUserName}}</p>
+                  <p style="margin:0">{{subComments.commentDescription}}</p>
+                </v-col>
+                <v-col lg="1">
+                  <v-avatar style="text-align:right">
+                    <!-- <span>t</span> -->
+                    <v-img :src="subComment.profilePicture"></v-img>
+                  </v-avatar>
+                </v-col>
+              </v-row>
+            <!-- </div> -->
           <v-divider></v-divider>
           </div>
         </v-col>
@@ -204,7 +211,7 @@ export default {
     commentInput:false,
     bottom: false,
     pageNo:0,
-    pageSize:2,
+    pageSize:1,
     comment:'',
     subComment:'',
     profileDetails:{},
@@ -321,12 +328,12 @@ export default {
         headers:{token:localStorage.getItem('accessToken')}
       })
       .then(function(response){
-        // window.console.log(response.data)
+        window.console.log(response.data)
         response.data.data.forEach(element => {
           that.posts.push(element)
         });
         that.pageNo++;
-        // window.console.log(that.posts)
+        window.console.log(that.posts)
       })
     }
   },
@@ -354,6 +361,17 @@ export default {
   watch: {
     bottom(bottom) {
       if (bottom) {
+    this.reactionsDialog=false,
+    this.friendsDialog=false,
+    this.commentInput=false,
+    this.bottom=false,
+    this.pageNo=0,
+    this.pageSize=1,
+    this.comment='',
+    this.subComment='',
+    this.profileDetails={},
+    this.friendsList=[],
+    this.posts=[]
         this.getPosts()
       }
     }
@@ -388,5 +406,9 @@ export default {
 }
 .like{
   color:blue
+}
+.boxTextRight{
+  text-align: right!important;
+  align-items: right!important
 }
 </style>

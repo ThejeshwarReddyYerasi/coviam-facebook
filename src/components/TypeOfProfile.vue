@@ -24,7 +24,7 @@ import axios from 'axios'
     },
     methods:{
       submit(){
-        // let that = this
+        let that = this
       let payload = {
           profile:this.accountType,
           role:'',
@@ -59,6 +59,7 @@ import axios from 'axios'
             headers:{token:localStorage.getItem('accessToken')},
             data:dat
           })
+          that.$router.push({path:'/editprofile'})
         })
       }
     }

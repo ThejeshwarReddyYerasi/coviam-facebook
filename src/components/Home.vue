@@ -9,11 +9,11 @@
                   <v-row>
                     <v-col lg="2">
                       <v-avatar>
-                        <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                        <v-img :src="item.profilePicture"></v-img>
                       </v-avatar>
                     </v-col>
                     <v-col lg="10">
-                      <v-row>Name</v-row>
+                      <v-row>{{item.userName}}</v-row>
                       <v-row>{{item.postDate}}</v-row>
                     </v-col>
                   </v-row>
@@ -38,7 +38,7 @@
                       <v-btn v-else text @click="likePost(item.postId)" >
                         <v-icon>fas fa-thumbs-up</v-icon>
                       </v-btn>
-                      <span style="margin-right:5px;margin-top:5px">Like{{item.counterOfLikes}}</span></v-col>
+                      <span style="margin-right:5px;margin-top:5px">Like {{item.counterOfLikes}}</span></v-col>
                     <v-col><v-btn text @click="dislike(item.postId,item.postDescription,item.postImageUrl,item.counterOfDislilkes)"><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike{{item.counterOfDislilkes}}</span></v-btn></v-col>
                     <v-col>
                       <div style="margin-right:5px;margin-top:7px;cursor:pointer">
@@ -87,10 +87,11 @@
                     <v-row style="margin-top:10px" class="boxTextLeft">
                       <v-col lg="1">
                         <v-avatar style="margin-left:10px" size="40">
-                          <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                          <v-img :src="comment.profilePicture"></v-img>
                         </v-avatar>
                       </v-col>
                       <v-col lg="11" style="padding-left:15px">
+                        <v-row>{{comment.commentingUserName}}</v-row>
                         <v-row>{{comment.commentDescription}}</v-row>
                         <v-row>
                           <a @click="showCommentInput($event)">Reply</a>
@@ -98,11 +99,14 @@
                         </v-row>
                       </v-col>
                     </v-row>
-                    <v-row v-for="(subComments,j) in comment.subComments" :key="j">
-                      <v-col style="text-align:right">
-                        {{subComments.commentDescription}}
+                    <v-row v-for="(subComments,j) in comment.subComments" :key="j" style="text-align:right">
+                      <v-col lg="11">
+                        <p style="margin:0">{{subComments.commentingUserName}}</p>
+                        <p style="margin:0">{{subComments.commentDescription}}</p>
+                      </v-col>
+                      <v-col lg="1">
                         <v-avatar>
-                          <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                          <v-img :src="subComments.profilePicture"></v-img>
                         </v-avatar>
                       </v-col>
                     </v-row>
@@ -114,7 +118,7 @@
           </v-col>
           <v-col lg="4">
              <v-card v-for="(item,n) in adPosts" :key="n" @click="adClicked(item.adId,item.tag,item.advertiserId,item.categoryName,item.description,item.targetUrl)">
-               <v-img
+               <v-img max-height="400" :contain="true"
                 :src="item.imageUrl"
                ></v-img>
                 <p>{{item.description}}</p>
@@ -138,12 +142,14 @@ export default {
     commentInput:false,
     bottom: false,
     pageNo:0,
-    pageSize:2,
+    pageSize:1,
     comment:'',
     subComment:'',
     profileDetails:{},
     friendsList:[],
-    posts:[]
+    posts:[],
+    tempPosts:[],
+    // length:1
   }),
   methods:{
     adClicked(adId,tag,advertiserId,categoryName,description,targetUrl){
@@ -157,12 +163,13 @@ export default {
         source:'facebook',
         targetUrl:targetUrl
       }
+      window.console.log(payload)
       axios({
         url:'http://172.16.20.83:8080/ads/onclick',
         method:'post',
         data: payload
       }).then(function(response){
-        // window.console.log(response.data)
+        window.console.log(response.data)
         window.open(response.data, '_blank');
       })
       .catch(function(response){
@@ -279,10 +286,12 @@ export default {
       })
       .then(function(response){
         window.console.log(response.data)
+          if(response.data.data.length>0){
+            that.pageNo++;
+          }
         response.data.data.forEach(element => {
           that.posts.push(element)
         });
-        that.pageNo++;
         // window.console.log(that.posts)
       })
     }
@@ -291,14 +300,30 @@ export default {
     let that = this
     axios.get(`http://172.16.20.83:8080/ads/getAds/${localStorage.getItem('accessToken')}`)
     .then(function(response){
-      that.adPosts = response.data
-      window.console.log(response.data)
+      that.tempPosts = response.data
+      window.console.log(that.adPosts)
     })
     window.addEventListener('scroll', () => {
       this.bottom = this.bottomVisible()
     })
     this.getPosts()
   },
+  watch: {
+    bottom(bottom) {
+      if (bottom) {
+        this.getPosts()
+      }
+    },
+    pageNo(pageNo) {
+      this.adPosts = []
+      for(let i=0;i<=pageNo;i++){
+        // this.adPosts.push(this.tempPosts[i])
+        let value = Math.floor(Math.random() * this.tempPosts.length)
+        this.adPosts.push(this.tempPosts[value])
+        this.tempPosts.splice(value,1)
+      }
+    }
+  }
   
 };
 </script>

@@ -30,7 +30,7 @@
                   width="500"
                 >
                   <template v-slot:activator="{ on }">                    
-                      <v-btn text @click.stop="getFriendsList()" v-on="on" style="background-color:#4267B2;color:white"><span>Mutual Friends</span></v-btn>
+                      <v-btn text @click.stop="getMutualFriendsList(profileDetails.userId)" v-on="on" style="background-color:#4267B2;color:white"><span>Mutual Friends</span></v-btn>
                   </template>
                   <v-card max-height="700px">
                     <v-card-title
@@ -46,15 +46,15 @@
                         @click="goToProfile(item.userId)"
                       >
                         <v-col lg="1">
-                          <v-avatar color="grey">
-                              T
-                            <!-- <v-img
+                          <v-avatar style="margin-left:20px">
+                            <v-img
                               :src="item.userImage"
-                            ></v-img> -->
+                            ></v-img>
                           </v-avatar>
                         </v-col>
-                        <v-col lg="11">
-                          <p>{{item.userFirstName}}</p>
+                        <v-col lg="1"></v-col>
+                        <v-col lg="10">
+                          <p style="margin-top:10px">{{item.userFirstName}}</p>
                         </v-col>
                       </v-row>
                         <v-divider></v-divider>
@@ -79,7 +79,7 @@
 
             </v-row>
             <!-- <v-row v-if="isFriend"><v-btn text style="background-color:#4267B2;color:white;margin-top:30px">Added</v-btn></v-row> -->
-            <v-row v-if="computeAddFriend"><v-btn text style="background-color:#4267B2;color:white;margin-top:30px">Add Friend</v-btn></v-row>
+            <v-row v-if="computeAddFriend"><v-btn @click="addFriend(profileDetails.userId)" style="background-color:#4267B2;color:white;margin-top:30px">Add Friend</v-btn></v-row>
          </v-col>
        </v-row>
       </v-col>
@@ -90,11 +90,11 @@
           <v-row>
             <v-col lg="2">
               <v-avatar>
-                <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                <v-img :src="profileDetails.profilePicure" :contain="true"></v-img>
               </v-avatar>
             </v-col>
             <v-col lg="10">
-              <v-row>Name</v-row>
+              <v-row>{{profileDetails.userFirstName}}</v-row>
               <v-row>{{item.postDate}}</v-row>
             </v-col>
           </v-row>
@@ -119,7 +119,7 @@
               <v-btn v-else text @click="likePost(item.postId)" >
                 <v-icon>fas fa-thumbs-up</v-icon>
               </v-btn>
-              <span style="margin-right:5px;margin-top:5px">Like{{item.counterOfLikes}}</span></v-col>
+              <span style="margin-right:5px;margin-top:5px">Like {{item.counterOfLikes}}</span></v-col>
             <v-col><v-btn text @click="dislike(item.postId,item.postDescription,item.postImageUrl,item.counterOfDislilkes)"><v-icon style="margin-right:5px;margin-top:5px">fas fa-thumbs-down</v-icon><span>Dislike{{item.counterOfDislilkes}}</span></v-btn></v-col>
             <v-col>
               <div style="margin-right:5px;margin-top:7px;cursor:pointer">
@@ -168,10 +168,11 @@
             <v-row style="margin-top:10px" class="boxTextLeft">
               <v-col lg="1">
                 <v-avatar style="margin-left:10px" size="40">
-                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                  <v-img :src="comment.profilePicture"></v-img>
                 </v-avatar>
               </v-col>
               <v-col lg="11" style="padding-left:15px">
+                <v-row>{{comment.commentingUserName}}</v-row>
                 <v-row>{{comment.commentDescription}}</v-row>
                 <v-row>
                   <a @click="showCommentInput($event)">Reply</a>
@@ -179,13 +180,16 @@
                 </v-row>
               </v-col>
             </v-row>
-            <v-row v-for="(subComments,j) in comment.subComments" :key="j">
-              <v-col style="text-align:right">
-                {{subComments.commentDescription}}
-                <v-avatar>
-                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-                </v-avatar>
-              </v-col>
+            <v-row v-for="(subComments,j) in comment.subComments" :key="j" style="text-align:right">
+              <v-col lg="11">
+                  <p style="margin:0">{{subComments.commentingUserName}}</p>
+                  <p style="margin:0">{{subComments.commentDescription}}</p>
+                </v-col>
+                <v-col lg="1">
+                  <v-avatar>
+                    <v-img :src="subComments.profilePicture"></v-img>
+                  </v-avatar>
+                </v-col>
             </v-row>
           <v-divider></v-divider>
           </div>
@@ -314,7 +318,7 @@ export default {
       event.target.classList.add("hideInput")
 
     },
-     bottomVisible() {
+    bottomVisible() {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
@@ -327,11 +331,81 @@ export default {
         headers:{token:localStorage.getItem('accessToken')}
       })
       .then(function(response){
-        // window.console.log(response.data)
+        window.console.log(response.data)
         response.data.data.forEach(element => {
           that.posts.push(element)
         });
         that.pageNo++;
+      })
+    },
+    addFriend(id){
+      let payload = {
+        toRequestId:id
+      }
+      window.console.log(payload)
+      axios({
+        url:'/backend/friends',
+        method:'post',
+        headers:{
+          token:localStorage.getItem('accessToken')
+        },
+        data:payload
+      })
+    },
+    changeInRoute(){
+      let that = this
+      axios({
+        url:'http://172.16.20.126:8082/user/getUserInfo',
+        method:'get',
+        headers:{
+          userId: this.$route.query.id
+        }
+      })
+      .then(function(response){
+        that.profileDetails = response.data.data;
+        // window.console.log(that.profileDetails)
+        if(that.profileDetails.typeOfProfile=='Public'){
+          that.conditionOne = true
+          window.console.log("one"+that.conditionOne)
+        }
+            axios({
+            url:`/backend/friends/checkfriendship/${that.$route.query.id}`,
+            method:'get',
+            headers:{
+              token:localStorage.getItem('accessToken')
+            }
+          }).then(function(response){
+            // window.console.log("is friend")
+            if(response.data.data){
+              that.computeMutualFriends = true
+            }else{that.computeAddFriend = true}
+            window.console.log("two"+response.data.data)
+            if(response.data.data || that.conditionOne){
+                window.addEventListener('scroll', () => {
+                  that.bottom = that.bottomVisible()
+                })
+                that.getPosts()
+            }
+          }).catch(function(response){
+            window.console.log(response)
+          })
+      })
+      .catch(function(response){
+        window.console.log(response)
+      }) 
+    },
+    getMutualFriendsList(id){
+      let that = this
+      axios({
+        url:`/backend/friends/mutualFriends/${id}`,
+        method:'get',
+        headers:{
+          token:localStorage.getItem('accessToken')
+        },
+      })
+      .then(function(response){
+        window.console.log(response)
+        that.friendsList = response.data.data
       })
     }
   },
@@ -347,6 +421,7 @@ export default {
     })
     .then(function(response){
       that.profileDetails = response.data.data;
+      window.console.log(that.profileDetails)
        if(that.profileDetails.typeOfProfile=='Public'){
          that.conditionOne = true
          window.console.log("one"+that.conditionOne)
@@ -377,11 +452,19 @@ export default {
       window.console.log(response)
     })
   },
+  computed:{
+    getRoute(){
+      return this.$route.query.id
+    }
+  },
   watch: {
     bottom(bottom) {
       if (bottom) {
         this.getPosts()
       }
+    },
+    getRoute() {
+      this.changeInRoute()
     }
   }
 };

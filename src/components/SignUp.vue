@@ -24,16 +24,7 @@
               </div>
             </v-card>
             <!-- <div v-if="showCategoryList">
-                <v-row>
-                    <v-col lg="4" v-for="(item,index) in categoryList" :key="index">
-                        <div style="padding:20px">
-                            <v-row>{{item.categoryName}}</v-row>
-                            <v-row v-for="(category,n) in item.tags" :key="n">
-                                <v-checkbox v-model="tagList" :label="category" :value="category"></v-checkbox>
-                            </v-row>
-                        </div>
-                    </v-col>
-                </v-row>
+                
             </div> -->
       </v-app>
   </div>
@@ -46,8 +37,6 @@ export default {
         return{
             items: ['Public','Private','Business'],
             showCategoryList:false,
-            categoryList:[],
-            tagList:[],
             password:'',
             userName:'',
             userEmail:'',
@@ -74,11 +63,7 @@ export default {
     },
     created(){
         // let that = this
-        // axios.get('http://172.16.20.98:8080/ads/categories')
-        // .then(function(response){
-        //     that.categoryList = response.data
-        //     window.console.log(that.categoryList)
-        // })
+        
     },
 }
 </script>
