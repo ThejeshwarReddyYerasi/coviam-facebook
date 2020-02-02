@@ -43,12 +43,7 @@ methods: {
           this.submit()
         });
       }
-<<<<<<< HEAD
-      );
-
-=======
       )
->>>>>>> Theja
   },
   onfileSelected(event) {
       this.uploadValue=0;

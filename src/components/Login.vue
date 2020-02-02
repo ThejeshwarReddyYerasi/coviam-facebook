@@ -59,10 +59,6 @@ export default {
       // window.console.log(data)
       axios.post('/backendCommonInfraLogin/controller/login',data)
       .then(function(response){
-<<<<<<< HEAD
-                window.console.log(response.data.data)
-                localStorage.setItem('accessToken',response.data.data.accessToken)
-=======
         window.console.log(response.data)
         if(response.data.statusCode == 1000){
           if(!response.data.data.profile){
@@ -74,7 +70,6 @@ export default {
           }
         }
         localStorage.setItem('accessToken',response.data.data.accessToken)
->>>>>>> Theja
       })
     }
   }

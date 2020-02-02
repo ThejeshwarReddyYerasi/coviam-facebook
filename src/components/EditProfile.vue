@@ -76,15 +76,12 @@ export default {
         }
     },          
 methods: {
-<<<<<<< HEAD
-=======
    submit: function(){
        this.$store.dispatch('editProfile',{
            data: this.user,
        }); 
        this.$router.push('/profile'); 
    },
->>>>>>> Theja
    onUpload() {
      let that = this
     this.picture=null;
