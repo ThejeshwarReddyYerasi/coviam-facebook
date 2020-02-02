@@ -9,7 +9,7 @@
                   <v-row>
                     <v-col lg="2">
                       <v-avatar>
-                        <v-img :src="item.profilePicture"></v-img>
+                        <v-img :src="item.profilePicture" :contain="true"></v-img>
                       </v-avatar>
                     </v-col>
                     <v-col lg="10">
@@ -87,7 +87,7 @@
                     <v-row style="margin-top:10px" class="boxTextLeft">
                       <v-col lg="1">
                         <v-avatar style="margin-left:10px" size="40">
-                          <v-img :src="comment.profilePicture"></v-img>
+                          <v-img :src="comment.profilePicture" :contain="true"></v-img>
                         </v-avatar>
                       </v-col>
                       <v-col lg="11" style="padding-left:15px">
@@ -106,7 +106,7 @@
                       </v-col>
                       <v-col lg="1">
                         <v-avatar>
-                          <v-img :src="subComments.profilePicture"></v-img>
+                          <v-img :src="subComments.profilePicture" :contain="true"></v-img>
                         </v-avatar>
                       </v-col>
                     </v-row>

@@ -187,7 +187,7 @@
                 <v-col lg="1">
                   <v-avatar style="text-align:right">
                     <!-- <span>t</span> -->
-                    <v-img :src="subComment.profilePicture"></v-img>
+                    <v-img :src="subComment.profilePicture" :contain="true"></v-img>
                   </v-avatar>
                 </v-col>
               </v-row>
