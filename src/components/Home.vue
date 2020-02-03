@@ -34,8 +34,8 @@ export default {
       that.adPosts = response.data
       window.console.log(response.data)
     })
-  },
-  methods:{
+  }, 
+  methods:{ 
     adClicked(adId,tag,advertiserId,categoryName,description,targetUrl){
       let payload = {
         adId:adId,
