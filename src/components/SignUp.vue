@@ -5,8 +5,6 @@
               <v-row>
                   <v-col>Sign Up</v-col>
               </v-row>
-              {{password}}{{userName}}{{userEmail}}
-
               <div id="inner">
                 <input v-model="userName" type="text" name="userName" placeholder="UserName" class="input"><br><br>
                 <input v-model="userEmail" type="email" name="email" placeholder="E-Mail" class="input"><br><br>
@@ -20,6 +18,8 @@
               </div> -->
                 <!-- <input type="number" name="phoneNumber" placeholder="Phone-Number" class="input"><br><br> -->
                 <v-btn color="#4267B2" style="color:white;width:60%;margin-bottom:20px" @click="signup()">Signup</v-btn>
+                <v-btn color="#4267B2" style="color:white;width:60%;margin-bottom:20px" @click="login()">SignIn</v-btn>
+
                 <!-- <v-btn color="#4267B2" style="color:white;width:60%;margin-top:30px;margin-bottom:30px">Login</v-btn> -->
               </div>
             </v-card>
@@ -59,6 +59,9 @@ export default {
                 window.console.log(response)
                 that.$router.push({path:'/login'})
             })
+        },
+        login(){
+            this.$router.push({path:'/login'})
         }
     },
     created(){

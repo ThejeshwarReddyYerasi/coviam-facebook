@@ -16,7 +16,7 @@
                     <p style="margin:auto">{{item.userFirstName}}</p>
                   </v-row>
                   <v-row style="margin-top:10px;padding-bottom:20px">
-                    <v-btn @click="acceptRequest(item.userId)" style="margin:auto">Accespt request</v-btn>
+                    <v-btn @click="acceptRequest(item.userId)" style="margin:auto">Accept request</v-btn>
                   </v-row>
                   <!-- </div> -->
                 </v-card>

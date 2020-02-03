@@ -1,87 +1,93 @@
 <template>
 <div class="container id">
   <v-app>
-    <div>
-      <div class="title" style="font-weight:bold">
-          Edit Profile
-      </div>
-          <br> 
-      <v-form
-      align-content="center"
-      ref="form"
-      max-width="100"
-      lazy-validation
-      > 
-      <v-text-field
-        v-model="user.userFirstName"
-        label="user name"
-        required
-      ></v-text-field> 
-
-      <v-text-field
-      type="email"
-        v-model="user.userEmailId"
-        label="E-mail"
-        required
-        :disabled="true"
-      ></v-text-field>
-
-      <v-text-field
-        v-model="user.userCity"
-        label="city"
-        required
-      ></v-text-field>
-        
-        <v-text-field
-        type="date"
-        v-model="user.userDateOfBirth"
-        label="Date Of Birth"
-        required
-      ></v-text-field>
-
-        <v-select
-        v-model="user.userGender"
-        :items="gender"
-        label="Gender"
-        required
-      >
-          </v-select>
-
-      <v-text-field
-        v-model="user.personalDescription"
-        label="Personal Description"
-        required
-      ></v-text-field>
-      <input type="file" accept="video/*,image/png" @change="onfileSelected" />
-      <!-- <v-file-input accept="image/*" prepend-icon="mdi-camera" label="Upload Profile Picture" @change="onfileSelected()"></v-file-input> -->
-    </v-form>
-  </div>
-  <v-dialog fullscreen hide-overlay transition="dialog-bottom-transition" v-model="dialog">
-    <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on" style="margin-top:20px">Select Categories</v-btn>
-    </template>
-    <v-card>
-      <v-row style="text-align:right;background-color:#4267B2;height:50px"><v-btn @click="sendCategories()" text right>Save</v-btn></v-row>
-      <div style="width:90%;margin:auto">
-        <v-row>
-        <v-col lg="4" v-for="(item,index) in categoryList" :key="index">
-            <div style="padding:20px">
-                <v-row>{{item.categoryName}}</v-row>
-                <v-row v-for="(category,n) in item.tags" :key="n">
-                    <v-checkbox v-model="tagList" :label="category" :value="category"></v-checkbox>
-                </v-row>
+    <v-row>
+      <v-col lg="8">
+          <div>
+            <div class="title" style="font-weight:bold">
+                Edit Profile
             </div>
-        </v-col>
-        {{tagList}}
-      </v-row>
+            <br> 
+          <v-form
+          align-content="center"
+          ref="form"
+          max-width="100"
+          lazy-validation
+          > 
+          <v-text-field
+            v-model="user.userFirstName"
+            label="user name"
+            required
+          ></v-text-field> 
+
+          <v-text-field
+          type="email"
+            v-model="user.userEmailId"
+            label="E-mail"
+            required
+            :disabled="true"
+          ></v-text-field>
+
+          <v-text-field
+            v-model="user.userCity"
+            label="city"
+            required
+          ></v-text-field>
+            
+            <v-text-field
+            type="date"
+            v-model="user.userDateOfBirth"
+            label="Date Of Birth"
+            required
+          ></v-text-field>
+
+            <v-select
+            v-model="user.userGender"
+            :items="gender"
+            label="Gender"
+            required
+          >
+              </v-select>
+
+          <v-text-field
+            v-model="user.personalDescription"
+            label="Personal Description"
+            required
+          ></v-text-field>
+          <input type="file" accept="video/*,image/png" @change="onfileSelected" />
+          <!-- <v-file-input accept="image/*" prepend-icon="mdi-camera" label="Upload Profile Picture" @change="onfileSelected()"></v-file-input> -->
+        </v-form>
       </div>
-    </v-card>
-  </v-dialog>
-  <v-btn style="margin-top:30px"
-        @click="onUpload"
-      > 
-        Submit
-      </v-btn>
+      <v-dialog fullscreen hide-overlay transition="dialog-bottom-transition" v-model="dialog">
+        <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark v-on="on" style="margin-top:20px;width:100%">Select Categories</v-btn>
+        </template>
+        <v-card>
+          <v-row style="text-align:right;background-color:#4267B2;height:60px"><v-btn @click="dialog=false" color="yellow" style="margin:10px;margin-left:20px" right>Close</v-btn></v-row>
+          <div style="width:90%;margin:auto">
+            <v-row>
+            <v-col lg="4" v-for="(item,index) in categoryList" :key="index">
+                <div style="padding:20px">
+                    <v-row>{{item.categoryName}}</v-row>
+                    <v-row v-for="(category,n) in item.tags" :key="n">
+                        <v-checkbox v-model="tagList" :label="category" :value="category"></v-checkbox>
+                    </v-row>
+                </div>
+            </v-col>
+          </v-row>
+          </div>
+        </v-card>
+      </v-dialog>
+      <v-row>
+          <v-btn style="margin-top:30px;width:100%" @click="onUpload"> Submit </v-btn>
+      </v-row>
+      <v-row></v-row>
+    </v-col>
+      <v-col lg="4">
+        {{tagList}}
+      </v-col>
+    </v-row>
+    
   </v-app>
 </div>
 </template>
@@ -108,6 +114,9 @@ methods: {
        this.$router.push('/profile'); 
    },
    onUpload() {
+     if(this.tagList.length>0){
+        this.sendCategories()
+      }
      let that = this
     this.picture=null;
       const storageRef=storage.ref(`${this.selectedFile.name}`).put(this.selectedFile);
@@ -179,8 +188,4 @@ created() {
 } 
 </script>
 <style scoped> 
-.container{   
-    width:500px; 
-    align-self:center;  
-}
 </style> 

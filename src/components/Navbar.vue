@@ -28,14 +28,15 @@
           <v-col lg="4">
             <v-btn text class="navbarButton" @click="$router.push({path:'/profile'})">profile</v-btn>
             <v-btn text class="navbarButton" @click="$router.push({path:'/home'})">Home</v-btn>
-            <v-btn icon @click="$router.push({path:'/notifications'})">
+            <!-- <v-btn icon @click="$router.push({path:'/notifications'})">
               <v-icon class="navbarButton">fas fa-bell</v-icon>
-            </v-btn>
+            </v-btn> -->
             <v-btn icon @click="$router.push({path:'/requests'})">
               <v-icon class="navbarButton" >fas fa-user-friends</v-icon>
             </v-btn>
           </v-col>
           <v-col><v-btn icon class="navbarButton" @click="$router.push({path:'/editProfile'})"><v-icon>fas fa-user</v-icon></v-btn></v-col>
+          <v-btn style="margin-top:15px" v-if="compute" @click="signout()">Sign out</v-btn>
         </v-row>
     </v-toolbar>
     <!-- </v-app> -->
@@ -53,18 +54,6 @@ export default {
     select:null,
     search:null,
     loading:false,
-    states: [
-          'Alabama',
-          'Alaska',
-          'American Samoa',
-          'Arizona',
-          'Arkansas',
-          'California',
-          'Colorado',
-          'Connecticut',
-          'Delaware',
-          'District of Columbia',
-        ],
   }),
   methods:{
     querySelections (v) {
@@ -93,11 +82,24 @@ export default {
       //     this.loading = false
       //   }, 500)
     },
+    signout(){
+      localStorage.removeItem('accessToken');
+      this.$router.push({path:'/signup'})
+    }
   },
   created(){
     // if(localStorage.getItem('user-token')==null){
     //   this.show=false
     // }
+  },
+  computed:{
+    compute(){
+      if(localStorage.getItem('accessToken')!=null){
+        return true
+      }else{
+        return false
+      }
+    }
   },
   watch:{
     search (val){
