@@ -18,7 +18,7 @@
     <v-row style="background: #ffffff;">
       <v-col><v-btn id="video-btn" icon color="#000000"><input type="file" accept="video/*,image/png" @change="onfileSelected" /></v-btn></v-col>
       <!-- <v-col lg="5"><v-btn id="video-btn" icon color="#000000"><input type="file" accept="image/*" @change="onfileSelected" /></v-btn></v-col> -->
-      <v-col style="text-align:right;"><v-btn id="submit-btn" @click="onUpload"> Upload</v-btn></v-col>
+      <v-col style="text-align:right;"><v-btn id="submit-btn" @click="submit()"> Upload</v-btn></v-col>
     </v-row>
   </v-container>
 </template>
@@ -31,7 +31,7 @@ export default {
 name: 'CreatePosts',
 methods: {
   onUpload() {
-    this.picture = null
+    // this.picture = null
       const storageRef=storage.ref(`${this.selectedFile.name}`).put(this.selectedFile);
       storageRef.on(`state_changed`,snapshot=>{
         this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
@@ -40,7 +40,7 @@ methods: {
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
           this.picture =url;
           window.console.log(this.picture);
-          this.submit()
+          // this.submit()
         });
       }
       )
@@ -51,6 +51,10 @@ methods: {
      this.selectedFile = event.target.files[0]
 },
   submit(){
+    let that = this
+    if(this.selectedFile){
+      this.onUpload()
+    }
     let payload = {
           postDescription:this.postText,
           postImageUrl:this.picture
@@ -62,6 +66,10 @@ methods: {
             token:localStorage.getItem('accessToken')
           },
           data:payload
+        })
+        .then(function(response){
+          window.console.log(response.data)
+          that.$router.push({path:'/profile'})
         })
   }
 },

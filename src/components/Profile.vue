@@ -45,15 +45,14 @@
                         style="cursor:pointer"
                         @click="goToProfile(item.userId)"
                       >
-                        <v-col lg="1">
+                        <v-col lg="1" style="padding-left:40px">
                           <v-avatar color="grey">
-                              T
-                            <!-- <v-img
+                            <v-img
                               :src="item.userImage"
-                            ></v-img> -->
+                            ></v-img>
                           </v-avatar>
                         </v-col>
-                        <v-col lg="11">
+                        <v-col lg="10" style="padding-top:20px;padding-left:50px">
                           <p>{{item.userFirstName}}</p>
                         </v-col>
                       </v-row>
@@ -155,11 +154,11 @@
                 </v-dialog>
               </div>
             </v-col>
-            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{item.counterOfComments}} comments</a></div></v-col>
+            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{posts[index].parentComments.length}} comments</a></div></v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
-            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId)">
+            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId,index)">
           </v-row>
           <v-divider></v-divider>
           <div v-for="(comment,i) in item.parentComments" :key="i">
@@ -174,7 +173,7 @@
                 <v-row>{{comment.commentDescription}}</v-row>
                 <v-row>
                   <a @click="showCommentInput($event)">Reply</a>
-                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event)" placeholder="Reply">
+                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event,index)" placeholder="Reply">
                 </v-row>
               </v-col>
             </v-row>
@@ -185,9 +184,9 @@
                   <p style="margin:0">{{subComments.commentDescription}}</p>
                 </v-col>
                 <v-col lg="1">
-                  <v-avatar style="text-align:right">
+                  <v-avatar style="text-align:right;padding-right:10px">
                     <!-- <span>t</span> -->
-                    <v-img :src="subComment.profilePicture" :contain="true"></v-img>
+                    <v-img :src="subComments.profilePicture" :contain="true"></v-img>
                   </v-avatar>
                 </v-col>
               </v-row>
@@ -228,15 +227,15 @@ export default {
       })
       .then(function(response){
         that.friendsList = response.data.data
-        // window.console.log(that.friendsList)
+        window.console.log(that.friendsList)
       })
-      window.console.log("getfriendslist")
+      // window.console.log("getfriendslist")
     },
     getReactionsOnPost(){
       window.console.log("getReactionsOnPost")
     },
-    addNewComment(postId,userId){
-      // let that = this
+    addNewComment(postId,userId,index){
+      let that = this
       let payload = {
         postId: postId,
         userId: userId,
@@ -244,7 +243,7 @@ export default {
         commentingUserId:'',
         parentCommentId:null
       }
-      window.console.log(payload)
+      // window.console.log(payload)
       axios({
         url:'/backend/comment/',
         method:'post',
@@ -252,6 +251,12 @@ export default {
           token:localStorage.getItem('accessToken')
         },
         data:payload
+      })
+      .then(function(response){
+        // window.console.log(response.data)
+        that.posts[index].parentComments = response.data.data
+        that.comment = ''
+        // window.console.log(that.posts)
       })
     },
     showCommentInput(event){
@@ -289,10 +294,11 @@ export default {
       })
     },
     goToProfile(profileId){
-      window.console.log(profileId)
+      this.$router.push({path:'/viewprofile',query:{id:profileId}})
     },
-    addComment(commentId,postId,userId,event){
-      window.console.log(event)
+    addComment(commentId,postId,userId,event,index){
+      let that = this
+      // window.console.log(event)
       let payload = {
         postId: postId,
         userId: userId,
@@ -310,7 +316,8 @@ export default {
         data:payload
       })
       .then(function(response){
-        window.console.log(response.data)
+        that.posts[index].parentComments = response.data.data
+        // window.console.log(response.data)
       })
       event.target.classList.add("hideInput")
 
@@ -328,55 +335,48 @@ export default {
         headers:{token:localStorage.getItem('accessToken')}
       })
       .then(function(response){
-        window.console.log(response.data)
+        // window.console.log(response.data)
         response.data.data.forEach(element => {
           that.posts.push(element)
         });
         that.pageNo++;
-        window.console.log(that.posts)
+        // window.console.log(that.posts)
       })
     }
   },
   created(){
-    let that = this
-    axios({
-      url:'/backend/user/getUserInfo',
-      method:'get',
-      headers:{
-        token:localStorage.getItem('accessToken')
-      }
-    })
-    .then(function(response){
-      that.profileDetails = response.data.data;
-      window.console.log(that.profileDetails)
-    })
-    .catch(function(response){
-      window.console.log(response)
-    })
-    window.addEventListener('scroll', () => {
-      this.bottom = this.bottomVisible()
-    })
-    this.getPosts()
   },
   watch: {
     bottom(bottom) {
       if (bottom) {
-    this.reactionsDialog=false,
-    this.friendsDialog=false,
-    this.commentInput=false,
-    this.bottom=false,
-    this.pageNo=0,
-    this.pageSize=1,
-    this.comment='',
-    this.subComment='',
-    this.profileDetails={},
-    this.friendsList=[],
-    this.posts=[]
         this.getPosts()
       }
     }
+  },
+  beforeRouteEnter(to,from,next) {
+    next(vm=>{
+      axios({
+        url:'/backend/user/getUserInfo',
+        method:'get',
+        headers:{
+          token:localStorage.getItem('accessToken')
+        }
+      })
+      .then(function(response){
+        vm.profileDetails = response.data.data;
+        // window.console.log(vm.profileDetails)
+        window.addEventListener('scroll', () => {
+          vm.bottom = vm.bottomVisible()
+        })
+        vm.getPosts()
+      })
+      .catch(function(response){
+        window.console.log(response)
+      })
+    })
   }
 };
+
 </script>
 <style scoped>
 .boxColor{

@@ -76,11 +76,11 @@
                         </v-dialog>
                       </div>
                     </v-col>
-                    <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{item.counterOfComments}} comments</a></div></v-col>
+                    <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{posts[index].parentComments.length}} comments</a></div></v-col>
                   </v-row>
                   <v-divider></v-divider>
                   <v-row style="margin-bottom:10px">
-                    <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId)">
+                    <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId,index)">
                   </v-row>
                   <v-divider></v-divider>
                   <div v-for="(comment,i) in item.parentComments" :key="i">
@@ -95,7 +95,7 @@
                         <v-row>{{comment.commentDescription}}</v-row>
                         <v-row>
                           <a @click="showCommentInput($event)">Reply</a>
-                          <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event)" placeholder="Reply">
+                          <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event,index)" placeholder="Reply">
                         </v-row>
                       </v-col>
                     </v-row>
@@ -160,7 +160,7 @@ export default {
         categoryName:categoryName,
         userId:localStorage.getItem('accessToken'),
         description:description,
-        source:'facebook',
+        source:'Facebook',
         targetUrl:targetUrl
       }
       window.console.log(payload)
@@ -192,8 +192,8 @@ export default {
     getReactionsOnPost(){
       window.console.log("getReactionsOnPost")
     },
-    addNewComment(postId,userId){
-      // let that = this
+    addNewComment(postId,userId,index){
+      let that = this
       let payload = {
         postId: postId,
         userId: userId,
@@ -209,6 +209,9 @@ export default {
           token:localStorage.getItem('accessToken')
         },
         data:payload
+      }).then(function(response){
+        that.posts[index].parentComments = response.data.data;
+        that.comment = ''
       })
     },
     showCommentInput(event){
@@ -248,7 +251,8 @@ export default {
     goToProfile(profileId){
       window.console.log(profileId)
     },
-    addComment(commentId,postId,userId,event){
+    addComment(commentId,postId,userId,event,index){
+      let that = this
       window.console.log(event)
       let payload = {
         postId: postId,
@@ -267,7 +271,8 @@ export default {
         data:payload
       })
       .then(function(response){
-        window.console.log(response.data)
+        that.posts[index].parentComments = response.data.data
+        // window.console.log(response.data)
       })
       event.target.classList.add("hideInput")
 
@@ -285,7 +290,7 @@ export default {
         headers:{token:localStorage.getItem('accessToken')}
       })
       .then(function(response){
-        window.console.log(response.data)
+        // window.console.log(response.data)
           if(response.data.data.length>0){
             that.pageNo++;
           }
@@ -297,16 +302,6 @@ export default {
     }
   },
   created(){
-    let that = this
-    axios.get(`http://172.16.20.83:8080/ads/getAds/${localStorage.getItem('accessToken')}`)
-    .then(function(response){
-      that.tempPosts = response.data
-      window.console.log(that.adPosts)
-    })
-    window.addEventListener('scroll', () => {
-      this.bottom = this.bottomVisible()
-    })
-    this.getPosts()
   },
   watch: {
     bottom(bottom) {
@@ -316,15 +311,27 @@ export default {
     },
     pageNo(pageNo) {
       this.adPosts = []
-      for(let i=0;i<=pageNo;i++){
+      for(let i=0;i<pageNo;i++){
         // this.adPosts.push(this.tempPosts[i])
         let value = Math.floor(Math.random() * this.tempPosts.length)
         this.adPosts.push(this.tempPosts[value])
         this.tempPosts.splice(value,1)
       }
     }
+  },
+  beforeRouteEnter(to,from,next){
+    next(vm=>{
+      axios.get(`http://172.16.20.83:8080/ads/getAds/${localStorage.getItem('accessToken')}`)
+      .then(function(response){
+        vm.tempPosts = response.data
+        window.console.log(vm.tempPosts)
+      })
+      window.addEventListener('scroll', () => {
+        vm.bottom = vm.bottomVisible()
+      })
+      vm.getPosts()
+    })
   }
-  
 };
 </script>
 <style scoped>

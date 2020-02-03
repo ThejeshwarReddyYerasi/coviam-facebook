@@ -157,11 +157,11 @@
                 </v-dialog>
               </div>
             </v-col>
-            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{item.counterOfComments}} comments</a></div></v-col>
+            <v-col><div style="margin-right:5px;margin-top:7px;cursor:pointer"><a>{{posts[index].parentComments.length}} comments</a></div></v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row style="margin-bottom:10px">
-            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId)">
+            <input type="text" class="comment" placeholder="Comment" v-model="comment" @keydown.enter="addNewComment(item.postId,item.userId,index)">
           </v-row>
           <v-divider></v-divider>
           <div v-for="(comment,i) in item.parentComments" :key="i">
@@ -176,7 +176,7 @@
                 <v-row>{{comment.commentDescription}}</v-row>
                 <v-row>
                   <a @click="showCommentInput($event)">Reply</a>
-                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event)" placeholder="Reply">
+                  <input type="text" class="hideInput comment" v-model="subComment" @keydown.enter="addComment(comment.commentId,comment.postId,item.userId,$event,index)" placeholder="Reply">
                 </v-row>
               </v-col>
             </v-row>
@@ -238,8 +238,8 @@ export default {
     getReactionsOnPost(){
       window.console.log("getReactionsOnPost")
     },
-    addNewComment(postId,userId){
-      // let that = this
+    addNewComment(postId,userId,index){
+      let that = this
       let payload = {
         postId: postId,
         userId: userId,
@@ -255,6 +255,10 @@ export default {
           token:localStorage.getItem('accessToken')
         },
         data:payload
+      })
+      .then(function(response){
+        that.posts[index].parentComments = response.data.data;
+        that.comment = ''
       })
     },
     showCommentInput(event){
@@ -294,7 +298,8 @@ export default {
     goToProfile(profileId){
       window.console.log(profileId)
     },
-    addComment(commentId,postId,userId,event){
+    addComment(commentId,postId,userId,event,index){
+      let that = this
       window.console.log(event)
       let payload = {
         postId: postId,
@@ -313,7 +318,9 @@ export default {
         data:payload
       })
       .then(function(response){
-        window.console.log(response.data)
+        // window.console.log(response.data)
+        that.posts[index].parentComments = response.data.data;
+        // that.comment = ''
       })
       event.target.classList.add("hideInput")
 
@@ -354,6 +361,13 @@ export default {
     },
     changeInRoute(){
       let that = this
+      this.profileDetails ={},
+      this.conditionOne = false;
+      this.computeMutualFriends = false;
+      this.computeAddFriend = false;
+      this.bottom = false;
+      this.posts = [],
+      this.pageNo = 0
       axios({
         url:'http://172.16.20.126:8082/user/getUserInfo',
         method:'get',
@@ -410,47 +424,46 @@ export default {
     }
   },
   created(){
-    
     let that = this
-    axios({
-      url:'http://172.16.20.126:8082/user/getUserInfo',
-      method:'get',
-      headers:{
-        userId: this.$route.query.id
-      }
-    })
-    .then(function(response){
-      that.profileDetails = response.data.data;
-      window.console.log(that.profileDetails)
-       if(that.profileDetails.typeOfProfile=='Public'){
-         that.conditionOne = true
-         window.console.log("one"+that.conditionOne)
-       }
-          axios({
-          url:`/backend/friends/checkfriendship/${that.$route.query.id}`,
-          method:'get',
-          headers:{
-            token:localStorage.getItem('accessToken')
-          }
-        }).then(function(response){
-          // window.console.log("is friend")
-          if(response.data.data){
-            that.computeMutualFriends = true
-          }else{that.computeAddFriend = true}
-          window.console.log("two"+response.data.data)
-          if(response.data.data || that.conditionOne){
-              window.addEventListener('scroll', () => {
-                that.bottom = that.bottomVisible()
-              })
-              that.getPosts()
-          }
-        }).catch(function(response){
-          window.console.log(response)
-        })
-    })
-    .catch(function(response){
-      window.console.log(response)
-    })
+      axios({
+        url:'http://172.16.20.126:8082/user/getUserInfo',
+        method:'get',
+        headers:{
+          userId: this.$route.query.id
+        }
+      })
+      .then(function(response){
+        that.profileDetails = response.data.data;
+        window.console.log(that.profileDetails)
+        if(that.profileDetails.typeOfProfile=='Public'){
+          that.conditionOne = true
+          window.console.log("one"+that.conditionOne)
+        }
+            axios({
+            url:`/backend/friends/checkfriendship/${that.$route.query.id}`,
+            method:'get',
+            headers:{
+              token:localStorage.getItem('accessToken')
+            }
+          }).then(function(response){
+            // window.console.log("is friend")
+            if(response.data.data){
+              that.computeMutualFriends = true
+            }else{that.computeAddFriend = true}
+            window.console.log("two"+response.data.data)
+            if(response.data.data || that.conditionOne){
+                window.addEventListener('scroll', () => {
+                  that.bottom = that.bottomVisible()
+                })
+                that.getPosts()
+            }
+          }).catch(function(response){
+            window.console.log(response)
+          })
+      })
+      .catch(function(response){
+        window.console.log(response)
+      })
   },
   computed:{
     getRoute(){
@@ -464,9 +477,10 @@ export default {
       }
     },
     getRoute() {
+      window.console.log(this.$route.query.id)
       this.changeInRoute()
     }
-  }
+  },
 };
 </script>
 <style scoped>
